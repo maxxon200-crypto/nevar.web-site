@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Logo from "@/components/ui/Logo";
+import SheenLink from "@/components/ui/SheenLink";
 import { nav } from "@/data/site";
 import { ArrowRight } from "@/components/ui/icons";
 
@@ -74,7 +75,7 @@ export default function Header() {
               <a
                 key={item.href}
                 href={item.href}
-                className="link-underline font-mono text-xs uppercase tracking-[0.16em] text-ink-soft transition-colors hover:text-ink"
+                className="link-underline font-body text-xs font-medium uppercase tracking-[0.16em] text-ink-soft transition-colors hover:text-ink"
               >
                 {item.label}
               </a>
@@ -82,10 +83,10 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:block">
-            <a href="#contatto" className="btn-primary !px-5 !py-2.5">
-              Preventivo
+            <SheenLink href="#contatto" className="btn-primary !px-5 !py-2.5">
+              <span>Preventivo</span>
               <ArrowRight size={14} />
-            </a>
+            </SheenLink>
           </div>
 
           {/* Mobile toggle */}

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { archivo, plexMono } from "./fonts";
+import { archivo, geist, plexMono } from "./fonts";
 import { site } from "@/data/site";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -65,7 +65,7 @@ export default function RootLayout({
     <html
       lang="it"
       suppressHydrationWarning
-      className={`${archivo.variable} ${plexMono.variable}`}
+      className={`${archivo.variable} ${geist.variable} ${plexMono.variable}`}
     >
       <body className="font-body antialiased">
         {/* Enable JS-only reveal hiding before paint (no flash, works without JS). */}

@@ -1,4 +1,5 @@
 import Magnetic from "@/components/ui/Magnetic";
+import SheenLink from "@/components/ui/SheenLink";
 import { ArrowRight, ArrowDown } from "@/components/ui/icons";
 import GlassStage from "./GlassStage";
 
@@ -59,10 +60,10 @@ export default function Hero() {
           style={{ animationDelay: "0.25s" }}
         >
           <Magnetic>
-            <a href="#contatto" className="btn-primary">
-              Richiedi un preventivo
+            <SheenLink href="#contatto" className="btn-primary">
+              <span>Richiedi un preventivo</span>
               <ArrowRight />
-            </a>
+            </SheenLink>
           </Magnetic>
           <a href="#servizi" className="btn-ghost">
             Servizi e prezzi

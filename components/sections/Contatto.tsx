@@ -41,6 +41,7 @@ export default function Contatto() {
     {}
   );
   const [status, setStatus] = useState<Status>("idle");
+  const [done, setDone] = useState(false);
 
   const mailtoHref = useMemo(() => {
     const subject = `Richiesta preventivo (${fields.tipo}): ${
@@ -90,7 +91,13 @@ export default function Contatto() {
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean };
       if (res.ok && data.ok) {
-        setStatus("success");
+        // Visual confirm (B6): show the check on the button, then reveal the
+        // success panel. Send logic is unchanged.
+        setDone(true);
+        window.setTimeout(() => {
+          setDone(false);
+          setStatus("success");
+        }, 1500);
         return;
       }
       // Any non-success (incl. email not configured) -> mailto fallback.
@@ -232,10 +239,17 @@ export default function Contatto() {
                     <button
                       type="submit"
                       disabled={status === "submitting"}
-                      className="btn-primary justify-center disabled:cursor-not-allowed disabled:opacity-70"
+                      className={`btn-primary btn-submit justify-center disabled:cursor-not-allowed disabled:opacity-70 ${
+                        done ? "is-done" : ""
+                      }`}
                     >
-                      {status === "submitting" ? "Invio in corso" : "Invia richiesta"}
-                      <ArrowRight size={14} />
+                      <span className="btn-label">
+                        {status === "submitting" ? "Invio in corso" : "Invia richiesta"}
+                      </span>
+                      <ArrowRight size={14} className="btn-arrow" />
+                      <span className="btn-check" aria-hidden>
+                        {"✓"}
+                      </span>
                     </button>
                     <p className="text-xs leading-relaxed text-ink-mute">
                       Inviando accetti la{" "}

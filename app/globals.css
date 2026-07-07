@@ -75,10 +75,8 @@
   body {
     background-color: var(--paper);
     color: var(--ink);
-    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
     font-weight: 400;
-    /* wdth only, so font-weight utilities still drive the wght axis normally. */
-    font-variation-settings: "wdth" 100;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -205,6 +203,29 @@
     font-family: var(--font-mono), ui-monospace, monospace;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.01em;
+  }
+
+  /* Glass disc holding the Metodo phase icons */
+  .metodo-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: radial-gradient(
+      120% 120% at 30% 20%,
+      rgba(255, 255, 255, 0.92),
+      rgba(73, 197, 182, 0.14)
+    );
+    border: 1px solid rgba(182, 186, 197, 0.6);
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.9),
+      0 10px 24px -14px rgba(0, 158, 201, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .metodo-icon svg {
+    width: 34px;
+    height: 34px;
   }
 
   /* ------------------------------------------------------------------------
@@ -448,4 +469,78 @@
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* --------------------------------------------------------------------------
+   Button click animations (added on top of the base .btn-* styles).
+   B4 sheen on primary CTAs, B6 confirm on the form submit button.
+   Reduced motion neutralises them via the media query above (!important).
+   ------------------------------------------------------------------------ */
+.btn-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-sheen > * {
+  position: relative;
+  z-index: 2;
+}
+.btn-sheen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  transform: skewX(-20deg);
+  z-index: 1;
+  pointer-events: none;
+}
+.btn-sheen.is-sheen::after {
+  animation: btnSheen 0.7s ease;
+}
+@keyframes btnSheen {
+  from {
+    left: -120%;
+  }
+  to {
+    left: 140%;
+  }
+}
+
+.btn-submit {
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+.btn-submit .btn-label,
+.btn-submit .btn-arrow {
+  transition: opacity 0.25s ease;
+}
+.btn-submit.is-done {
+  background: #49c5b6;
+}
+.btn-submit.is-done .btn-label,
+.btn-submit.is-done .btn-arrow {
+  opacity: 0;
+}
+.btn-submit .btn-check {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  color: #fff;
+  font-size: 18px;
+}
+.btn-submit.is-done .btn-check {
+  opacity: 1;
 }

@@ -40,31 +40,33 @@ Ombre: solo morbide e fredde (blu, mai nero duro). Vedi `boxShadow` in Tailwind
 ## 2. Tipografia
 
 Fetch a build-time e self-host automatico con `next/font/google` (`app/fonts.ts`).
-Nessun CDN a runtime. Due sole famiglie, entrambe OFL:
+Nessun CDN a runtime. Tre famiglie, tutte OFL:
 
-| Ruolo   | Font                     | Variabile CSS    | Impostazione                                  |
-| ------- | ------------------------ | ---------------- | --------------------------------------------- |
-| Display | **Archivo** (variabile)  | `--font-archivo` | Expanded: `wght` 800, `font-variation-settings: "wdth" 125` |
-| Body    | **Archivo** (variabile)  | `--font-archivo` | Normale: `wght` 400, `font-variation-settings: "wdth" 100`  |
-| Mono    | **IBM Plex Mono** (400/600) | `--font-mono` | Label, numeri, prezzi, coordinate             |
+| Ruolo    | Font                        | Variabile CSS    | Impostazione                                  |
+| -------- | --------------------------- | ---------------- | --------------------------------------------- |
+| Display  | **Archivo** (variabile)     | `--font-archivo` | Expanded: `wght` 800, `font-variation-settings: "wdth" 125` |
+| Testo/UI | **Geist** (variabile)       | `--font-geist`   | Corpo `wght` 400, menu `wght` 500             |
+| Mono     | **IBM Plex Mono** (400/600) | `--font-mono`    | Label, numeri, prezzi, coordinate             |
 
-Archivo è caricato una volta sola con l'asse di larghezza (`axes: ['wdth']`); la
-larghezza Expanded è forzata via CSS sugli elementi display, così l'asse non
-torna mai a "normal". Il body imposta solo `"wdth" 100`, così le utility di peso
-(font-medium, font-bold) continuano a pilotare l'asse `wght`.
+Archivo è usato solo per i titoloni: caricato con l'asse di larghezza
+(`axes: ['wdth']`), la larghezza Expanded è forzata via CSS sugli elementi
+display così l'asse non torna mai a "normal". Il corpo, l'interfaccia e i link di
+navigazione usano **Geist** (peso pilotato dalle utility `font-medium` /
+`font-bold`). Il mono resta IBM Plex Mono.
 
 Regole:
 
 - Mai Inter, Helvetica o neo-grotesque generico.
 - Il display Expanded (Archivo wdth 125 / 800) non si usa mai per il corpo del
   testo.
+- Il testo di corpo, UI e navigazione è Geist; i titoloni restano Archivo.
 - Il mono (IBM Plex Mono) si usa per la microcopy "da pannello di controllo":
-  coordinate, timestamp, versioni, prezzi.
+  coordinate, timestamp, versioni, prezzi, eyebrow.
 - Nessuna scritta sotto i 12px effettivi (`.label-mono` parte da 13px).
 
 ### Come cambiare font
 
-Tutto passa da `app/fonts.ts` + le due variabili CSS. Per sostituire il display
+Tutto passa da `app/fonts.ts` + le tre variabili CSS. Per sostituire il display
 con un font a pagamento (es. Monument Extended), importalo e rimappa
 `--font-archivo` sugli elementi display in `app/globals.css`; il resto resta
 invariato. Il social card (`app/opengraph-image.tsx`) usa ancora file TTF locali
@@ -210,11 +212,11 @@ Cerca questi valori e completali:
 
 ## 11. Font (riassunto)
 
-| Ruolo   | Font (OFL, via next/font/google) | Note                          |
-| ------- | -------------------------------- | ----------------------------- |
-| Display | **Archivo** Expanded             | `wght` 800, `wdth` 125        |
-| Body    | **Archivo** normale              | `wght` 400, `wdth` 100        |
-| Mono    | **IBM Plex Mono**                | pesi 400 / 600                |
+| Ruolo    | Font (OFL, via next/font/google) | Note                          |
+| -------- | -------------------------------- | ----------------------------- |
+| Display  | **Archivo** Expanded             | `wght` 800, `wdth` 125        |
+| Testo/UI | **Geist**                        | corpo 400, menu 500           |
+| Mono     | **IBM Plex Mono**                | pesi 400 / 600                |
 
 TODO: il social card `app/opengraph-image.tsx` renderizza ancora con file TTF
 locali di Space Mono (Satori non supporta gli assi variabili). Facoltativo:

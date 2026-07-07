@@ -1,7 +1,15 @@
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlassCard from "@/components/ui/GlassCard";
 import Reveal from "@/components/ui/Reveal";
+import {
+  IconAscolto,
+  IconDesign,
+  IconSviluppo,
+  IconLancio,
+} from "@/components/icons/MethodIcons";
 import { method } from "@/data/method";
+
+const METHOD_ICONS = [IconAscolto, IconDesign, IconSviluppo, IconLancio];
 
 export default function Metodo() {
   return (
@@ -14,23 +22,23 @@ export default function Metodo() {
         />
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {method.map((s, i) => (
-            <Reveal key={s.n} delay={i * 0.07} className="h-full">
-              <GlassCard className="flex h-full flex-col gap-5 p-7 transition-transform duration-500 ease-smooth hover:-translate-y-1">
-                <div className="flex items-baseline justify-between">
-                  <span
-                    className="font-display text-4xl text-teal-text"
-                    style={{ fontVariationSettings: '"wght" 800, "wdth" 125' }}
-                  >
-                    {s.n}
-                  </span>
-                  <span className="label-mono">{s.tag}</span>
-                </div>
-                <h3 className="display-md text-ink">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-ink-soft">{s.body}</p>
-              </GlassCard>
-            </Reveal>
-          ))}
+          {method.map((s, i) => {
+            const Icon = METHOD_ICONS[i] ?? IconAscolto;
+            return (
+              <Reveal key={s.n} delay={i * 0.07} className="h-full">
+                <GlassCard className="flex h-full flex-col gap-5 p-7 transition-transform duration-500 ease-smooth hover:-translate-y-1">
+                  <div className="flex items-center justify-between">
+                    <div className="metodo-icon">
+                      <Icon />
+                    </div>
+                    <span className="label-mono">{s.tag}</span>
+                  </div>
+                  <h3 className="display-md text-ink">{s.title}</h3>
+                  <p className="text-sm leading-relaxed text-ink-soft">{s.body}</p>
+                </GlassCard>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>

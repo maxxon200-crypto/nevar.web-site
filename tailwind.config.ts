@@ -30,7 +30,7 @@ const config: Config = {
       },
       fontFamily: {
         display: ["var(--font-archivo)", "system-ui", "sans-serif"],
-        body: ["var(--font-archivo)", "system-ui", "sans-serif"],
+        body: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       borderRadius: {
