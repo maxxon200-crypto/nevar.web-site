@@ -1,5 +1,4 @@
 import SectionHeading from "@/components/ui/SectionHeading";
-import GlassCard from "@/components/ui/GlassCard";
 import Reveal from "@/components/ui/Reveal";
 import {
   IconAscolto,
@@ -26,7 +25,7 @@ export default function Metodo() {
             const Icon = METHOD_ICONS[i] ?? IconAscolto;
             return (
               <Reveal key={s.n} delay={i * 0.07} className="h-full">
-                <GlassCard className="flex h-full flex-col gap-5 p-7 transition-transform duration-500 ease-smooth hover:-translate-y-1">
+                <div className="metodo-card flex h-full flex-col gap-5">
                   <div className="flex items-center justify-between">
                     <div className="metodo-icon">
                       <Icon />
@@ -35,7 +34,7 @@ export default function Metodo() {
                   </div>
                   <h3 className="display-md text-ink">{s.title}</h3>
                   <p className="text-sm leading-relaxed text-ink-soft">{s.body}</p>
-                </GlassCard>
+                </div>
               </Reveal>
             );
           })}

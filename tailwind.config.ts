@@ -31,7 +31,9 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-archivo)", "system-ui", "sans-serif"],
         body: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        // No monospace in the system: the historical `font-mono` utility now
+        // resolves to Geist so existing labels keep working after the sweep.
+        mono: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
       },
       borderRadius: {
         card: "24px",

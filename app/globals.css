@@ -140,8 +140,8 @@
 }
 
 /* --------------------------------------------------------------------------
-   Typography scale - Archivo Expanded for display (wght 800, wdth 125),
-   Archivo normal for body, IBM Plex Mono for panel microcopy.
+   Typography scale - Archivo Expanded for display and prices (wght 800,
+   wdth 125), Geist for everything else (body, UI, labels). No monospace.
    Display classes force wght + wdth via variation-settings so the width never
    resets to normal; font-weight is kept in step for the fallback face.
    ------------------------------------------------------------------------ */
@@ -151,8 +151,11 @@
     font-weight: 800;
     font-variation-settings: "wght" 800, "wdth" 125;
   }
+  /* Legacy utility name kept for the existing markup: now Geist medium so the
+     panel labels read as UI microcopy rather than monospace. */
   .font-mono {
-    font-family: var(--font-mono), ui-monospace, monospace;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-weight: 500;
   }
 
   .display-hero {
@@ -189,18 +192,22 @@
     line-height: 1.1;
   }
 
-  /* Panel microcopy: coordinates, versions, prices, labels. Never below 12px. */
+  /* Panel microcopy: coordinates, codes, eyebrows, labels. Geist medium,
+     uppercase, tracked. Never below 12px. */
   .label-mono {
-    font-family: var(--font-mono), ui-monospace, monospace;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
     font-size: clamp(13px, 1.1vw, 15px);
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--ink-mute);
   }
 
+  /* Prices share the Expanded display look of the tier names above them. */
   .price-mono {
-    font-family: var(--font-mono), ui-monospace, monospace;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 800;
+    font-variation-settings: "wght" 800, "wdth" 125;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.01em;
   }
@@ -226,6 +233,55 @@
   .metodo-icon svg {
     width: 34px;
     height: 34px;
+  }
+
+  /* Vetro M2: glass card for the Metodo phases, with a teal/aqua reflection
+     that sweeps across on hover. Content is lifted above the reflection. */
+  .metodo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    padding: 26px 22px;
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(240, 248, 248, 0.72)
+    );
+    border: 1px solid rgba(182, 186, 197, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 18px 44px -30px rgba(39, 121, 167, 0.5);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .metodo-card > * {
+    position: relative;
+    z-index: 1;
+  }
+  .metodo-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(
+      115deg,
+      transparent,
+      rgba(73, 197, 182, 0.25),
+      rgba(0, 158, 201, 0.12),
+      transparent
+    );
+    transform: skewX(-18deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .metodo-card:hover::after {
+    left: 130%;
+  }
+  .metodo-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 34px 60px -30px rgba(0, 158, 201, 0.6);
   }
 
   /* ------------------------------------------------------------------------
@@ -310,7 +366,8 @@
     border-radius: 999px;
     background: linear-gradient(180deg, var(--teal-text), var(--deep));
     color: var(--paper-pure);
-    font-family: var(--font-mono), ui-monospace, monospace;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-weight: 500;
     font-size: 0.78rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -340,7 +397,8 @@
     -webkit-backdrop-filter: blur(12px) saturate(130%);
     backdrop-filter: blur(12px) saturate(130%);
     color: var(--ink);
-    font-family: var(--font-mono), ui-monospace, monospace;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-weight: 500;
     font-size: 0.78rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -448,7 +506,8 @@
     background: rgba(39, 121, 167, 0.08);
     padding: 0.05em 0.4em;
     border-radius: 6px;
-    font-family: var(--font-mono), ui-monospace, monospace;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-weight: 500;
     font-size: 0.85em;
   }
 }
