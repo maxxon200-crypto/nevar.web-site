@@ -1,0 +1,428 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   nevar.web - design tokens (single source of truth, mirrored in DESIGN.md)
+   Cold white dominant. Teal / aqua / cyan appear only as light, reflection and
+   CTA. Never as a large flat field.
+   ========================================================================== */
+:root {
+  --paper: #f4f7f7; /* cold white, dominant background */
+  --paper-pure: #ffffff;
+  --ink: #0b1416; /* near-black, cold */
+  --ink-soft: #24343a; /* secondary text */
+  --ink-mute: #4d5d66; /* captions, metadata (AA-safe over the cold wash) */
+  --teal: #009ec9; /* primary accent (ref. Neko) - light / graphic use */
+  --teal-text: #0e7391; /* AA-safe teal for text/links on paper (>= 4.5:1) */
+  --aqua: #49c5b6; /* secondary accent (ref. Kubota) */
+  --deep: #2779a7; /* deep blue for depth / gradient */
+  --frost: #b6bac5; /* cold blue-grey, borders / glass (ref. Igloo) */
+  --glass-tint: rgba(73, 197, 182, 0.1); /* glass veil */
+
+  /* Derived, used across surfaces */
+  --glass-fill: rgba(255, 255, 255, 0.55);
+  --glass-fill-strong: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(182, 186, 197, 0.55);
+  --glass-specular: rgba(255, 255, 255, 0.85);
+  --hairline: rgba(11, 20, 22, 0.08);
+  --shadow-cold: rgba(39, 121, 167, 0.22);
+
+  --shell: 1240px;
+  --gutter: clamp(1.25rem, 5vw, 3.5rem);
+
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------------ */
+@layer base {
+  * {
+    border-color: var(--hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  /* Lenis manages scroll; when active, disable native smoothing to avoid fights */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Cold, quiet radial wash that keeps the page paper-dominant */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 80% at 82% -10%, rgba(73, 197, 182, 0.12), transparent 55%),
+      radial-gradient(90% 70% at 8% 110%, rgba(0, 158, 201, 0.08), transparent 60%),
+      var(--paper);
+  }
+
+  ::selection {
+    background: rgba(0, 158, 201, 0.18);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--teal-text);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Subtle cold scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(182, 186, 197, 0.6);
+    border-radius: 999px;
+    border: 2px solid var(--paper);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(122, 133, 143, 0.7);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Typography scale - wide/technical display (Anybody, expanded),
+   Space Grotesk body, Space Mono for panel microcopy.
+   Display classes always set weight + width together (variation-settings
+   overrides font-weight), so width never resets to normal.
+   ------------------------------------------------------------------------ */
+@layer components {
+  .font-display {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-variation-settings: "wght" 560, "wdth" 125;
+  }
+  .font-mono {
+    font-family: var(--font-mono), ui-monospace, monospace;
+  }
+
+  .display-hero {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-variation-settings: "wght" 600, "wdth" 130;
+    font-size: clamp(2.75rem, 9.5vw, 8.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+  }
+
+  .display-xl {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-variation-settings: "wght" 580, "wdth" 128;
+    font-size: clamp(2.25rem, 5.4vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.005em;
+  }
+
+  .display-lg {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-variation-settings: "wght" 560, "wdth" 122;
+    font-size: clamp(1.6rem, 3vw, 2.35rem);
+    line-height: 1.02;
+  }
+
+  .display-md {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-variation-settings: "wght" 560, "wdth" 118;
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    line-height: 1.1;
+  }
+
+  /* Panel microcopy: coordinates, versions, prices, labels */
+  .label-mono {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .price-mono {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* ------------------------------------------------------------------------
+     Liquid Glass surface
+     ---------------------------------------------------------------------- */
+  .glass {
+    position: relative;
+    background: linear-gradient(
+      180deg,
+      var(--glass-fill-strong),
+      var(--glass-fill)
+    );
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    box-shadow:
+      0 1px 0 0 var(--glass-specular) inset,
+      0 24px 60px -30px var(--shadow-cold);
+  }
+
+  /* Inner specular highlight along the top edge (Liquid Glass) */
+  .glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0) 40%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.7;
+  }
+
+  .glass-tint {
+    background:
+      linear-gradient(180deg, var(--glass-fill-strong), var(--glass-fill)),
+      var(--glass-tint);
+  }
+
+  /* ------------------------------------------------------------------------
+     Layout helpers
+     ---------------------------------------------------------------------- */
+  .shell {
+    width: 100%;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .section {
+    padding-block: clamp(5rem, 12vh, 9rem);
+    position: relative;
+  }
+
+  .hairline {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--frost),
+      transparent
+    );
+    opacity: 0.6;
+  }
+
+  /* Primary CTA - teal appears only as light / action, never a big flat field */
+  .btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.95rem 1.6rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--teal-text), var(--deep));
+    color: var(--paper-pure);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.35) inset,
+      0 10px 30px -10px rgba(0, 158, 201, 0.5);
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
+      0 18px 44px -12px rgba(0, 158, 201, 0.55);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.95rem 1.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.4);
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    backdrop-filter: blur(12px) saturate(130%);
+    color: var(--ink);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.5s ease,
+      background 0.5s ease;
+  }
+  .btn-ghost:hover {
+    transform: translateY(-2px);
+    border-color: var(--teal);
+    background: rgba(255, 255, 255, 0.62);
+  }
+
+  /* Reveal primitive. Hidden state applies ONLY when JS is available
+     (html.js), so with JS disabled all content renders visible. */
+  html.js .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  html.js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .link-underline {
+    background-image: linear-gradient(var(--teal), var(--teal));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    padding-bottom: 1px;
+  }
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  /* ------------------------------------------------------------------------
+     Legal pages - readable, editorial, not legalese soup.
+     ---------------------------------------------------------------------- */
+  .legal-prose {
+    max-width: 74ch;
+  }
+  .legal-prose h2 {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-variation-settings: "wght" 560, "wdth" 116;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1.1;
+    color: var(--ink);
+    margin-top: 3rem;
+    margin-bottom: 0.85rem;
+  }
+  .legal-prose h3 {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-top: 1.75rem;
+    margin-bottom: 0.4rem;
+  }
+  .legal-prose p {
+    color: var(--ink-soft);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+  .legal-prose ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-bottom: 1.25rem;
+  }
+  .legal-prose li {
+    position: relative;
+    padding-left: 1.3rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .legal-prose li::before {
+    content: "";
+    position: absolute;
+    left: 0.1rem;
+    top: 0.66em;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--teal);
+    opacity: 0.65;
+  }
+  .legal-prose a {
+    color: var(--teal-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .legal-prose strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .legal-prose .placeholder {
+    color: var(--teal-text);
+    background: rgba(39, 121, 167, 0.08);
+    padding: 0.05em 0.4em;
+    border-radius: 6px;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.85em;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion: honour the user's setting everywhere.
+   ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
