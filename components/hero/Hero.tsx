@@ -12,12 +12,12 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-4 pb-20 pt-28"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-4 pb-16 pt-24"
     >
       <div className="shell flex w-full flex-col items-center">
         {/* Panel eyebrow */}
         <div
-          className="mb-8 flex items-center gap-3 opacity-0 animate-fade-up sm:mb-10"
+          className="mb-4 flex items-center gap-3 opacity-0 animate-fade-up sm:mb-5"
           style={{ animationDelay: "0.1s" }}
         >
           <span className="label-mono">STUDIO</span>
@@ -43,12 +43,12 @@ export default function Hero() {
         </div>
 
         {/* Wordmark - single h1, paints immediately, given room to breathe */}
-        <h1 className="display-hero mt-10 text-center text-ink sm:mt-12">
+        <h1 className="display-hero mt-4 text-center text-ink sm:mt-6">
           nevar<span className="text-teal-text">.web</span>
         </h1>
 
         <p
-          className="mt-7 max-w-2xl text-balance text-center text-ink-soft"
+          className="mt-4 max-w-2xl text-balance text-center text-ink-soft"
           style={{ fontSize: "clamp(17px, 1.5vw, 20px)", lineHeight: 1.55 }}
         >
           Progetto e sviluppo siti web e app su misura per attività italiane.
@@ -56,7 +56,7 @@ export default function Hero() {
         </p>
 
         <div
-          className="mt-10 flex flex-wrap items-center justify-center gap-3 opacity-0 animate-fade-up"
+          className="mt-4 flex flex-wrap items-center justify-center gap-3 opacity-0 animate-fade-up"
           style={{ animationDelay: "0.25s" }}
         >
           <Magnetic>

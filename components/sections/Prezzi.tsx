@@ -20,9 +20,9 @@ export default function Prezzi() {
             <Reveal key={t.id} delay={i * 0.08} className="h-full">
               <GlassCard
                 tint={t.featured}
-                className={`flex h-full flex-col gap-7 p-8 transition-transform duration-500 ease-smooth hover:-translate-y-1 ${
+                className={`pricing-card flex h-full flex-col gap-7 p-8 ${
                   t.featured
-                    ? "ring-1 ring-teal/40 shadow-[0_1px_0_0_rgba(255,255,255,0.6)_inset,0_36px_80px_-36px_rgba(0,158,201,0.4)] lg:-translate-y-3"
+                    ? "pricing-card--featured ring-1 ring-teal/40 shadow-[0_1px_0_0_rgba(255,255,255,0.6)_inset,0_36px_80px_-36px_rgba(0,158,201,0.4)]"
                     : ""
                 }`}
               >
@@ -83,7 +83,7 @@ export default function Prezzi() {
         <div className="mt-5 grid gap-5 md:grid-cols-2">
           {extraOffers.map((o, i) => (
             <Reveal key={o.id} delay={i * 0.08}>
-              <GlassCard className="flex h-full flex-col gap-5 p-8 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+              <GlassCard className="pricing-card flex h-full flex-col gap-5 p-8 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
                 <div className="max-w-md">
                   <div className="flex items-center gap-3">
                     <span className="label-mono">{o.code}</span>

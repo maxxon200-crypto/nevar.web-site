@@ -3,6 +3,9 @@ import GlassCard from "@/components/ui/GlassCard";
 import Reveal from "@/components/ui/Reveal";
 import { services } from "@/data/services";
 import { ArrowRight, Check } from "@/components/ui/icons";
+import { IconWeb, IconApp, IconCare } from "@/components/icons/ServiceIcons";
+
+const SERVICE_ICONS = [IconWeb, IconApp, IconCare];
 
 export default function Servizi() {
   return (
@@ -15,13 +18,16 @@ export default function Servizi() {
         />
 
         <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {services.map((s, i) => (
+          {services.map((s, i) => {
+            const Icon = SERVICE_ICONS[i] ?? IconWeb;
+            const [priceMain, priceUnit] = s.priceHint.split(" / ");
+            return (
             <Reveal key={s.id} delay={i * 0.08} className="h-full">
-              <GlassCard className="group flex h-full flex-col gap-6 p-8 transition-transform duration-500 ease-smooth hover:-translate-y-1">
-                <div className="flex items-baseline justify-between">
-                  <span className="font-mono text-sm text-teal-text">
-                    {s.index}
-                  </span>
+              <GlassCard className="service-card group flex h-full flex-col gap-6 p-8">
+                <div className="flex items-center justify-between">
+                  <div className="service-icon">
+                    <Icon />
+                  </div>
                   <span className="label-mono">{s.kind}</span>
                 </div>
 
@@ -47,22 +53,29 @@ export default function Servizi() {
 
                 <div className="mt-auto flex flex-col gap-4 pt-2">
                   <div className="hairline" />
-                  <div className="flex items-center justify-between">
-                    <span className="price-mono text-lg text-ink">
-                      {s.priceHint}
+                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                    <span className="price-mono text-2xl text-ink">
+                      <span className="whitespace-nowrap">{priceMain}</span>
+                      {priceUnit ? (
+                        <span className="price-unit whitespace-nowrap">
+                          {" / "}
+                          {priceUnit}
+                        </span>
+                      ) : null}
                     </span>
                     <a
                       href="#prezzi"
-                      className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.16em] text-ink-mute transition-colors hover:text-teal-text"
+                      className="inline-flex shrink-0 items-center gap-1.5 font-mono text-sm uppercase tracking-[0.16em] text-ink-mute transition-colors hover:text-teal-text"
                     >
                       Prezzi
-                      <ArrowRight size={13} />
+                      <ArrowRight size={16} />
                     </a>
                   </div>
                 </div>
               </GlassCard>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
