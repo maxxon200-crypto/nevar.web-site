@@ -146,8 +146,7 @@ Easing condiviso: `cubic-bezier(0.22, 1, 0.36, 1)` (CSS e JS, `lib/motion.ts`).
 ```
 app/
   layout.tsx          root: metadata, font, JSON-LD, header/footer, providers
-  page.tsx            home one-page (Hero, Manifesto, Servizi, Prezzi,
-                      Metodo, Contatto)
+  page.tsx            home one-page (Hero, Servizi, Prezzi, Metodo, Contatto)
   privacy/            Privacy Policy (GDPR)
   cookie-policy/      Cookie Policy
   api/contact/        API route -> email (Resend) con fallback mailto

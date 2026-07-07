@@ -1,5 +1,4 @@
 import Hero from "@/components/hero/Hero";
-import Manifesto from "@/components/sections/Manifesto";
 import Servizi from "@/components/sections/Servizi";
 import Prezzi from "@/components/sections/Prezzi";
 import Metodo from "@/components/sections/Metodo";
@@ -11,7 +10,6 @@ export default function Home() {
     <main id="contenuto">
       <HashScroll />
       <Hero />
-      <Manifesto />
       <Servizi />
       <Prezzi />
       <Metodo />

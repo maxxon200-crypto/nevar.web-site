@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { getLenis } from "@/lib/lenis";
 
 /**
- * Landing on the home page with a hash (e.g. /#manifesto from Privacy) should
+ * Landing on the home page with a hash (e.g. /#servizi from Privacy) should
  * scroll to that section. Next may open the page at the top before the section
  * is ready, so this runs on mount as a fallback: it waits a beat for layout and
  * Lenis to settle, then scrolls to the target. Uses Lenis when available for a

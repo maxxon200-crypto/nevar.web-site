@@ -40,14 +40,10 @@ export const owner = {
 } as const;
 
 export const nav = [
-  { label: "Manifesto", href: "#manifesto" },
   { label: "Servizi", href: "#servizi" },
   { label: "Prezzi", href: "#prezzi" },
   { label: "Metodo", href: "#metodo" },
   { label: "Contatto", href: "#contatto" },
 ] as const;
-
-/** Panel coordinate used decoratively in the hero. Milano, Duomo. */
-export const coordinates = "45.4642° N, 9.1900° E";
 
 export const lastUpdated = "07 luglio 2026";

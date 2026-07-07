@@ -112,7 +112,7 @@ export default function Contatto() {
   return (
     <section id="contatto" className="section">
       <div className="shell">
-        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left: direct contact */}
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-5">
@@ -121,7 +121,9 @@ export default function Contatto() {
                 <span className="label-mono">Contatto</span>
               </div>
               <Reveal as="h2" className="display-xl text-ink">
-                Parliamo del tuo progetto
+                Parliamo del
+                <br />
+                <span className="text-teal-text">tuo progetto</span>
               </Reveal>
               <Reveal
                 as="p"
