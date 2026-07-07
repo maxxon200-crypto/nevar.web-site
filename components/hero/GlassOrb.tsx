@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   MeshTransmissionMaterial,
@@ -12,8 +12,10 @@ import * as THREE from "three";
 
 /**
  * Radial gradient used as the transmission background: cold white at the core,
- * aqua then teal toward the rim. It is only ever seen *through* the glass, so
- * the page around the orb stays paper-dominant.
+ * aqua then teal toward the rim. drei renders it into the refraction buffer so
+ * it is only ever seen *through* the glass; the page around the orb stays paper.
+ * Without a coloured background to refract the sphere reads as flat grey, which
+ * is exactly the bug we are fixing.
  */
 function useRefractionBackground() {
   return useMemo(() => {
@@ -24,16 +26,16 @@ function useRefractionBackground() {
     if (ctx) {
       const g = ctx.createRadialGradient(
         size * 0.5,
-        size * 0.42,
-        size * 0.04,
+        size * 0.4,
+        size * 0.03,
         size * 0.5,
         size * 0.5,
-        size * 0.62
+        size * 0.64
       );
       g.addColorStop(0, "#ffffff");
-      g.addColorStop(0.46, "#e9f5f2");
-      g.addColorStop(0.72, "#8fd8cd");
-      g.addColorStop(0.9, "#49c5b6");
+      g.addColorStop(0.4, "#e6f6f2");
+      g.addColorStop(0.66, "#8fd8cd");
+      g.addColorStop(0.86, "#49c5b6");
       g.addColorStop(1, "#009ec9");
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, size, size);
@@ -49,46 +51,52 @@ function Orb() {
   const inner = useRef<THREE.Mesh>(null);
   const background = useRefractionBackground();
 
+  // Dispose the imperatively-created texture on unmount (R3F only auto-disposes
+  // objects reconciled through JSX).
+  useEffect(() => () => background.dispose(), [background]);
+
   useFrame((state, delta) => {
     const d = Math.min(delta, 0.05); // clamp on tab refocus
     if (inner.current) {
-      inner.current.rotation.y += d * 0.1;
-      inner.current.rotation.x += d * 0.03;
+      inner.current.rotation.y += d * 0.12;
+      inner.current.rotation.x += d * 0.035;
     }
     if (group.current) {
       // Slow ease toward the pointer - micro-movement, never frantic.
-      const tx = state.pointer.y * 0.18;
-      const ty = state.pointer.x * 0.28;
+      const tx = state.pointer.y * 0.16;
+      const ty = state.pointer.x * 0.26;
       group.current.rotation.x += (tx - group.current.rotation.x) * 0.04;
       group.current.rotation.y += (ty - group.current.rotation.y) * 0.04;
     }
   });
 
   return (
-    <Float speed={1.1} rotationIntensity={0} floatIntensity={0.5}>
+    <Float speed={1.2} rotationIntensity={0} floatIntensity={0.6}>
       <group ref={group}>
         <mesh ref={inner}>
-          <icosahedronGeometry args={[1.16, 6]} />
+          {/* detail 6 already reads as a perfectly smooth sphere; going higher
+              (drei's 12-16 note is for other geometries) would be millions of
+              triangles for no visible gain. */}
+          <icosahedronGeometry args={[1.2, 6]} />
           <MeshTransmissionMaterial
-            transmissionSampler
+            background={background}
             backside
-            backsideThickness={0.3}
-            thickness={1.15}
+            backsideThickness={0.5}
+            thickness={1.6}
             samples={6}
             resolution={512}
             backsideResolution={256}
             transmission={1}
             roughness={0.05}
-            ior={1.45}
-            chromaticAberration={0.06}
+            ior={1.42}
+            chromaticAberration={0.045}
             anisotropicBlur={0.1}
-            distortion={0.22}
-            distortionScale={0.32}
-            temporalDistortion={0.12}
-            attenuationColor="#dff5f1"
-            attenuationDistance={2.6}
+            distortion={0.35}
+            distortionScale={0.3}
+            temporalDistortion={0.15}
+            attenuationColor="#e8fbf6"
+            attenuationDistance={3}
             color="#ffffff"
-            background={background}
           />
         </mesh>
       </group>
@@ -96,11 +104,14 @@ function Orb() {
   );
 }
 
-export default function GlassOrb() {
+export default function GlassOrb({ paused = false }: { paused?: boolean }) {
   return (
     <Canvas
       flat
       dpr={[1, 2]}
+      // Freeze GPU work when the hero is scrolled out of view without tearing
+      // down the (expensive to recompile) transmission material.
+      frameloop={paused ? "never" : "always"}
       gl={{
         antialias: true,
         alpha: true,
@@ -109,41 +120,44 @@ export default function GlassOrb() {
       camera={{ position: [0, 0, 4.2], fov: 34 }}
       style={{ width: "100%", height: "100%" }}
     >
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[3, 4, 5]} intensity={1.1} color="#ffffff" />
-      <directionalLight position={[-4, -2, -3]} intensity={0.4} color="#49c5b6" />
+      {/* Two cold lights: a white key and a soft teal fill. */}
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[3, 4, 5]} intensity={1.25} color="#ffffff" />
+      <directionalLight position={[-4, -2, -3]} intensity={0.5} color="#49c5b6" />
 
       <Orb />
 
-      {/* Cold environment built from lightformers - no external HDR fetch. */}
-      <Environment resolution={128} frames={1}>
+      {/* Cold environment built from lightformers - no external HDR fetch, so it
+          works behind the restrictive network policy. Bright enough to give the
+          glass crisp specular reflections instead of a dull grey body. */}
+      <Environment resolution={256} frames={1}>
         <color attach="background" args={["#eef4f4"]} />
         <Lightformer
           form="circle"
-          intensity={3}
-          position={[0, 2, 3]}
-          scale={6}
+          intensity={4}
+          position={[0, 2, 4]}
+          scale={7}
           color="#ffffff"
         />
         <Lightformer
           form="ring"
-          intensity={2}
-          position={[-3, 1, 2]}
-          scale={3}
+          intensity={2.4}
+          position={[-3, 1, 3]}
+          scale={3.5}
           color="#49c5b6"
         />
         <Lightformer
           form="rect"
-          intensity={1.6}
-          position={[3, -1, 2]}
-          scale={[4, 2, 1]}
+          intensity={2}
+          position={[3, -1, 3]}
+          scale={[5, 2, 1]}
           color="#009ec9"
         />
         <Lightformer
           form="rect"
-          intensity={2}
-          position={[0, -3, 1]}
-          scale={[8, 2, 1]}
+          intensity={2.6}
+          position={[0, -3, 2]}
+          scale={[9, 2, 1]}
           color="#ffffff"
         />
       </Environment>

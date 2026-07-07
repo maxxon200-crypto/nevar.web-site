@@ -20,6 +20,19 @@
   --frost: #b6bac5; /* cold blue-grey, borders / glass (ref. Igloo) */
   --glass-tint: rgba(73, 197, 182, 0.1); /* glass veil */
 
+  /* Same palette as space-separated RGB channels. Tailwind reads these so the
+     /opacity modifier works (e.g. bg-teal/70). Keep in sync with the hex above. */
+  --paper-rgb: 244 247 247;
+  --paper-pure-rgb: 255 255 255;
+  --ink-rgb: 11 20 22;
+  --ink-soft-rgb: 36 52 58;
+  --ink-mute-rgb: 77 93 102;
+  --teal-rgb: 0 158 201;
+  --teal-text-rgb: 14 115 145;
+  --aqua-rgb: 73 197 182;
+  --deep-rgb: 39 121 167;
+  --frost-rgb: 182 186 197;
+
   /* Derived, used across surfaces */
   --glass-fill: rgba(255, 255, 255, 0.55);
   --glass-fill-strong: rgba(255, 255, 255, 0.72);
@@ -62,7 +75,10 @@
   body {
     background-color: var(--paper);
     color: var(--ink);
-    font-family: var(--font-body), system-ui, sans-serif;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 400;
+    /* wdth only, so font-weight utilities still drive the wght axis normally. */
+    font-variation-settings: "wdth" 100;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -126,54 +142,60 @@
 }
 
 /* --------------------------------------------------------------------------
-   Typography scale - wide/technical display (Anybody, expanded),
-   Space Grotesk body, Space Mono for panel microcopy.
-   Display classes always set weight + width together (variation-settings
-   overrides font-weight), so width never resets to normal.
+   Typography scale - Archivo Expanded for display (wght 800, wdth 125),
+   Archivo normal for body, IBM Plex Mono for panel microcopy.
+   Display classes force wght + wdth via variation-settings so the width never
+   resets to normal; font-weight is kept in step for the fallback face.
    ------------------------------------------------------------------------ */
 @layer components {
   .font-display {
-    font-family: var(--font-display), system-ui, sans-serif;
-    font-variation-settings: "wght" 560, "wdth" 125;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 800;
+    font-variation-settings: "wght" 800, "wdth" 125;
   }
   .font-mono {
     font-family: var(--font-mono), ui-monospace, monospace;
   }
 
   .display-hero {
-    font-family: var(--font-display), system-ui, sans-serif;
-    font-variation-settings: "wght" 600, "wdth" 130;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 800;
+    font-variation-settings: "wght" 800, "wdth" 125;
     font-size: clamp(2.75rem, 9.5vw, 8.5rem);
     line-height: 0.92;
     letter-spacing: -0.01em;
   }
 
   .display-xl {
-    font-family: var(--font-display), system-ui, sans-serif;
-    font-variation-settings: "wght" 580, "wdth" 128;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 800;
+    font-variation-settings: "wght" 800, "wdth" 125;
     font-size: clamp(2.25rem, 5.4vw, 4rem);
     line-height: 0.98;
     letter-spacing: -0.005em;
   }
 
   .display-lg {
-    font-family: var(--font-display), system-ui, sans-serif;
-    font-variation-settings: "wght" 560, "wdth" 122;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 800;
+    font-variation-settings: "wght" 800, "wdth" 125;
     font-size: clamp(1.6rem, 3vw, 2.35rem);
     line-height: 1.02;
   }
 
   .display-md {
-    font-family: var(--font-display), system-ui, sans-serif;
-    font-variation-settings: "wght" 560, "wdth" 118;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 800;
+    font-variation-settings: "wght" 800, "wdth" 125;
     font-size: clamp(1.2rem, 1.8vw, 1.5rem);
     line-height: 1.1;
   }
 
-  /* Panel microcopy: coordinates, versions, prices, labels */
+  /* Panel microcopy: coordinates, versions, prices, labels. Never below 12px. */
   .label-mono {
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.72rem;
+    font-size: clamp(13px, 1.1vw, 15px);
+    font-weight: 400;
     letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--ink-mute);
@@ -346,8 +368,9 @@
     max-width: 74ch;
   }
   .legal-prose h2 {
-    font-family: var(--font-display), system-ui, sans-serif;
-    font-variation-settings: "wght" 560, "wdth" 116;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 800;
+    font-variation-settings: "wght" 800, "wdth" 125;
     font-size: clamp(1.3rem, 2vw, 1.7rem);
     line-height: 1.1;
     color: var(--ink);

@@ -29,8 +29,8 @@ export default function Prezzi() {
                 <div className="flex items-center justify-between">
                   <span className="label-mono">{t.code}</span>
                   {t.featured ? (
-                    <span className="rounded-pill bg-teal-text px-3 py-1 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white">
-                      Best-seller
+                    <span className="rounded-pill bg-teal-text px-3 py-1 font-mono text-xs uppercase tracking-[0.16em] text-white">
+                      Più scelto
                     </span>
                   ) : null}
                 </div>
@@ -88,7 +88,7 @@ export default function Prezzi() {
                   <div className="flex items-center gap-3">
                     <span className="label-mono">{o.code}</span>
                     <span className="h-1 w-1 rounded-full bg-aqua" aria-hidden />
-                    <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-ink-mute">
+                    <span className="font-mono text-xs uppercase tracking-[0.16em] text-ink-mute">
                       {o.tagline}
                     </span>
                   </div>

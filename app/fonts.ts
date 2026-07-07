@@ -1,62 +1,29 @@
-import localFont from "next/font/local";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 
 /**
- * Self-hosted fonts (next/font/local). No Google Fonts CDN at runtime.
- * Files are subset to Latin + Italian glyphs and shipped as woff2.
+ * Type system (see DESIGN.md).
  *
- * Roles (see DESIGN.md):
- *   display -> Anybody, variable (wdth 50-150 / wght 100-900). Used expanded.
- *   body    -> Space Grotesk, variable weight.
- *   mono    -> Space Mono, panel microcopy / numbers / prices.
+ *   Archivo (variable, wdth axis) -> one family, two roles:
+ *     - display  : weight 800, font-variation-settings "wdth" 125 (Expanded)
+ *     - body     : weight 400, font-variation-settings "wdth" 100
+ *   IBM Plex Mono (400 / 600)     -> labels, numbers, prices, panel microcopy.
  *
- * TODO (paid, if licensed): swap `--font-display` to Monument Extended or
- * Right Grotesk Wide by replacing the file below. Nothing else needs to change.
+ * Fonts are fetched at build time and self-hosted by next/font (no runtime CDN).
+ * The `wdth` axis is what gives us the Expanded display look without a second
+ * font file; the width is forced per element in globals.css.
  */
-
-export const display = localFont({
-  src: [
-    {
-      path: "./fonts/Anybody-var.woff2",
-      weight: "100 900",
-      style: "normal",
-    },
-  ],
-  variable: "--font-display",
+export const archivo = Archivo({
+  subsets: ["latin"],
+  axes: ["wdth"],
   display: "swap",
+  variable: "--font-archivo",
   fallback: ["system-ui", "sans-serif"],
-  adjustFontFallback: false,
-  preload: true,
 });
 
-export const body = localFont({
-  src: [
-    {
-      path: "./fonts/SpaceGrotesk-var.woff2",
-      weight: "300 700",
-      style: "normal",
-    },
-  ],
-  variable: "--font-body",
+export const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "600"],
   display: "swap",
-  fallback: ["system-ui", "sans-serif"],
-  preload: true,
-});
-
-export const mono = localFont({
-  src: [
-    {
-      path: "./fonts/SpaceMono-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "./fonts/SpaceMono-Bold.woff2",
-      weight: "700",
-      style: "normal",
-    },
-  ],
   variable: "--font-mono",
-  display: "swap",
   fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
-  preload: false,
 });

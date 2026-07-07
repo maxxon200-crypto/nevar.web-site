@@ -17,7 +17,7 @@ export default function LegalShell({
     <main id="contenuto" className="shell pb-24 pt-32 md:pt-40">
       <Link
         href="/"
-        className="group inline-flex items-center gap-2 font-mono text-[0.72rem] uppercase tracking-[0.16em] text-ink-mute transition-colors hover:text-teal-text"
+        className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-ink-mute transition-colors hover:text-teal-text"
       >
         <ArrowRight
           size={14}
@@ -33,7 +33,7 @@ export default function LegalShell({
         </div>
         <h1 className="display-xl text-ink">{title}</h1>
         <p className="max-w-2xl text-lg leading-relaxed text-ink-soft">{intro}</p>
-        <p className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-ink-mute">
+        <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-mute">
           Ultimo aggiornamento: {updated}
         </p>
       </div>

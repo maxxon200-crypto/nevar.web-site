@@ -26,9 +26,9 @@ export default function PrivacyPage() {
         <li>
           Email: <a href={site.emailHref}>{site.email}</a>
         </li>
-        <li>
-          Indirizzo: <span className="placeholder">{owner.address}</span>
-        </li>
+        {!owner.address.startsWith("[") ? (
+          <li>Indirizzo: {owner.address}</li>
+        ) : null}
       </ul>
       <p>
         Per qualsiasi domanda sulla privacy o per esercitare i tuoi diritti puoi
@@ -87,8 +87,8 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong>Servizio di posta elettronica</strong> (Google e, se
-          configurato, un provider di invio email) per ricevere e gestire i
-          messaggi del form.
+          configurato, Resend Inc. come provider di invio email) per ricevere e
+          gestire i messaggi del form.
         </li>
       </ul>
       <p>
@@ -121,9 +121,9 @@ export default function PrivacyPage() {
 
       <h2>7. Trasferimenti fuori dall'Unione Europea</h2>
       <p>
-        Alcuni fornitori (ad esempio Vercel e Google) possono trattare i dati
-        anche su server situati fuori dall'Unione Europea, in particolare negli
-        Stati Uniti. In questi casi il trasferimento avviene sulla base di
+        Alcuni fornitori (ad esempio Vercel, Google e, se configurato, Resend
+        Inc.) possono trattare i dati anche su server situati fuori dall'Unione
+        Europea, in particolare negli Stati Uniti. In questi casi il trasferimento avviene sulla base di
         garanzie adeguate previste dal GDPR, come le clausole contrattuali
         standard approvate dalla Commissione Europea o decisioni di adeguatezza
         applicabili.

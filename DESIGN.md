@@ -39,32 +39,36 @@ Ombre: solo morbide e fredde (blu, mai nero duro). Vedi `boxShadow` in Tailwind
 
 ## 2. Tipografia
 
-Self-host completo con `next/font/local` (`app/fonts.ts`). Nessun Google Fonts
-CDN a runtime. File subsettati a Latin + glifi italiani, formato woff2
-(~99 KB totali). Sorgenti e licenze OFL in `app/fonts/licenses/`.
+Fetch a build-time e self-host automatico con `next/font/google` (`app/fonts.ts`).
+Nessun CDN a runtime. Due sole famiglie, entrambe OFL:
 
-| Ruolo   | Font                      | Variabile CSS      | Note                                    |
-| ------- | ------------------------- | ------------------ | --------------------------------------- |
-| Display | **Anybody** (variabile)   | `--font-display`   | Wide/technical, usato espanso (wdth 116-130) |
-| Body    | **Space Grotesk** (var.)  | `--font-body`      | Peso 300-700                            |
-| Mono    | **Space Mono** (400/700)  | `--font-mono`      | Label, numeri, prezzi, coordinate       |
+| Ruolo   | Font                     | Variabile CSS    | Impostazione                                  |
+| ------- | ------------------------ | ---------------- | --------------------------------------------- |
+| Display | **Archivo** (variabile)  | `--font-archivo` | Expanded: `wght` 800, `font-variation-settings: "wdth" 125` |
+| Body    | **Archivo** (variabile)  | `--font-archivo` | Normale: `wght` 400, `font-variation-settings: "wdth" 100`  |
+| Mono    | **IBM Plex Mono** (400/600) | `--font-mono` | Label, numeri, prezzi, coordinate             |
+
+Archivo è caricato una volta sola con l'asse di larghezza (`axes: ['wdth']`); la
+larghezza Expanded è forzata via CSS sugli elementi display, così l'asse non
+torna mai a "normal". Il body imposta solo `"wdth" 100`, così le utility di peso
+(font-medium, font-bold) continuano a pilotare l'asse `wght`.
 
 Regole:
 
 - Mai Inter, Helvetica o neo-grotesque generico.
-- Il display wide (Anybody) non si usa mai per il corpo del testo.
-- Il mono si usa per la microcopy "da pannello di controllo": coordinate,
-  timestamp, versioni, prezzi.
+- Il display Expanded (Archivo wdth 125 / 800) non si usa mai per il corpo del
+  testo.
+- Il mono (IBM Plex Mono) si usa per la microcopy "da pannello di controllo":
+  coordinate, timestamp, versioni, prezzi.
+- Nessuna scritta sotto i 12px effettivi (`.label-mono` parte da 13px).
 
-### Font a pagamento sostituiti (TODO)
+### Come cambiare font
 
-- **Display**: la prima scelta del brief era **Monument Extended** o
-  **Right Grotesk Wide** (a pagamento). In assenza di licenza è stato usato il
-  fallback gratuito **Anybody** (OFL, con asse di larghezza reale wdth 50-150),
-  che rende bene l'estetica wide/strumentazione. **Per sostituirlo**: metti il
-  woff2 del font a pagamento in `app/fonts/`, aggiorna il solo `display` in
-  `app/fonts.ts`. Nessun'altra modifica necessaria.
-- Space Mono e Space Grotesk erano già gratuiti e sono usati come da brief.
+Tutto passa da `app/fonts.ts` + le due variabili CSS. Per sostituire il display
+con un font a pagamento (es. Monument Extended), importalo e rimappa
+`--font-archivo` sugli elementi display in `app/globals.css`; il resto resta
+invariato. Il social card (`app/opengraph-image.tsx`) usa ancora file TTF locali
+(vedi TODO in fondo).
 
 ### Scala tipografica (classi in `globals.css`)
 
@@ -90,17 +94,22 @@ non torna mai a "normal".
 
 ## 4. Hero - vetro liquido (WebGL)
 
-- `components/hero/GlassOrb.tsx`: React Three Fiber. `IcosahedronGeometry` ad
-  alto dettaglio (detail 6, letto come sfera liscia) + `MeshTransmissionMaterial`
-  (drei): transmission 1, roughness 0.05, ior 1.45, chromaticAberration 0.06,
-  distortion leggera. Ambiente freddo costruito con `Lightformer` (bianco +
-  teal + cyan), niente HDRI esterno. Il refraction background è un gradiente
-  radiale bianco->aqua->teal, visibile solo dentro il vetro (la pagina resta
-  paper).
-- `components/hero/GlassStage.tsx`: monta il canvas solo in viewport
-  (IntersectionObserver), solo su device capace (WebGL, non reduced-motion, non
-  low-end/mobile), attivazione differita in idle per non toccare l'LCP. DPR
-  cap `[1,2]`.
+- `components/hero/GlassOrb.tsx`: React Three Fiber. `IcosahedronGeometry`
+  (detail 6, letto come sfera liscia) + `MeshTransmissionMaterial` (drei):
+  transmission 1, roughness 0.05, ior 1.42, chromaticAberration 0.045,
+  distortion + temporalDistortion leggere per il vetro vivo. Il refraction
+  background è un gradiente radiale bianco->aqua->teal renderizzato da drei nel
+  buffer di rifrazione (senza `transmissionSampler`, altrimenti il gradiente non
+  viene mai campionato e la sfera resta grigia). Ambiente freddo costruito con
+  `Lightformer` (bianco + teal + cyan), niente HDRI esterno (rete ristretta).
+  Animazione in `useFrame`: rotazione lenta Y/X, bob verticale (`Float`),
+  parallasse col mouse in lerp.
+- `components/hero/GlassStage.tsx`: primo mount solo quando entra in viewport
+  (IntersectionObserver) e solo su device capace (WebGL, non reduced-motion, non
+  mobile, non low-end = poche core E poca RAM); attivazione differita in idle per
+  non toccare l'LCP. Una volta montato il canvas resta montato e mette in pausa
+  il frame loop fuori vista (`frameloop`), per non ricompilare il materiale a
+  ogni scroll. DPR cap `[1,2]`.
 - Fallback: `components/hero/HeroPoster.tsx`, poster SVG statico (bianco freddo
   + orb teal), usato su mobile/low-end/reduced-motion e come stato di
   caricamento. Su device capaci ma di default a poster, un pulsante "Attiva
@@ -199,10 +208,14 @@ Cerca questi valori e completali:
 
 ---
 
-## 11. Font a pagamento eventualmente sostituiti (riassunto)
+## 11. Font (riassunto)
 
-| Ruolo   | Prima scelta (a pagamento)        | Usato (gratuito, OFL) |
-| ------- | --------------------------------- | --------------------- |
-| Display | Monument Extended / Right Grotesk Wide | **Anybody**      |
-| Mono    | (gratuito già nel brief)          | Space Mono            |
-| Body    | (gratuito già nel brief)          | Space Grotesk         |
+| Ruolo   | Font (OFL, via next/font/google) | Note                          |
+| ------- | -------------------------------- | ----------------------------- |
+| Display | **Archivo** Expanded             | `wght` 800, `wdth` 125        |
+| Body    | **Archivo** normale              | `wght` 400, `wdth` 100        |
+| Mono    | **IBM Plex Mono**                | pesi 400 / 600                |
+
+TODO: il social card `app/opengraph-image.tsx` renderizza ancora con file TTF
+locali di Space Mono (Satori non supporta gli assi variabili). Facoltativo:
+allinearlo a IBM Plex Mono / Archivo instanziando dei TTF statici.

@@ -18,7 +18,14 @@ export const site = {
   country: "Italia",
   areaServed: ["Milano", "Lombardia", "Italia"],
   email: "nevar.web@gmail.com",
+  // Base mailto (no query) - the contact form appends its own subject + body.
   emailHref: "mailto:nevar.web@gmail.com",
+  // Prefilled subject used by the static email links (header/footer/contact).
+  emailSubject: "Richiesta preventivo nevar.web",
+  // Alternative: open Gmail's web compose window instead of the OS mail client.
+  // Swap it into components/ui/EmailLink.tsx if you prefer that behaviour.
+  emailComposeHref:
+    "https://mail.google.com/mail/?view=cm&fs=1&to=nevar.web@gmail.com&su=Richiesta%20preventivo",
   founded: "2025",
 } as const;
 

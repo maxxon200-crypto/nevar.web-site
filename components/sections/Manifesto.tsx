@@ -13,7 +13,7 @@ export default function Manifesto() {
               <span className="label-mono">Manifesto</span>
             </Reveal>
             <Reveal delay={0.05} className="hidden md:block">
-              <p className="font-mono text-[0.7rem] leading-relaxed text-ink-mute">
+              <p className="font-mono text-xs uppercase tracking-[0.14em] leading-relaxed text-ink-mute">
                 {coordinates}
                 <br />
                 STUDIO / {site.founded}

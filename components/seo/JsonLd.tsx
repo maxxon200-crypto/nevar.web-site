@@ -13,7 +13,6 @@ export default function JsonLd() {
     email: site.email,
     image: `${site.url}/opengraph-image`,
     logo: `${site.url}/logo.svg`,
-    inLanguage: "it",
     knowsLanguage: ["it"],
     priceRange: "€€",
     slogan: "Bianco, veloce, fatto a mano.",
@@ -38,7 +37,7 @@ export default function JsonLd() {
         priceCurrency: "EUR",
         price: "690",
         description:
-          "Siti web su misura, dalla vetrina one-page al progetto bespoke con WebGL e motion.",
+          "Siti web su misura, dalla vetrina one-page al progetto con WebGL e animazioni.",
       },
       {
         "@type": "Offer",

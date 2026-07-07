@@ -15,20 +15,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "var(--paper)",
-        "paper-pure": "var(--paper-pure)",
-        ink: "var(--ink)",
-        "ink-soft": "var(--ink-soft)",
-        "ink-mute": "var(--ink-mute)",
-        teal: "var(--teal)",
-        "teal-text": "var(--teal-text)",
-        aqua: "var(--aqua)",
-        deep: "var(--deep)",
-        frost: "var(--frost)",
+        // Channel-based so the /opacity modifier works (e.g. bg-teal/70).
+        // Raw-CSS and WebGL consumers keep reading the hex vars in globals.css.
+        paper: "rgb(var(--paper-rgb) / <alpha-value>)",
+        "paper-pure": "rgb(var(--paper-pure-rgb) / <alpha-value>)",
+        ink: "rgb(var(--ink-rgb) / <alpha-value>)",
+        "ink-soft": "rgb(var(--ink-soft-rgb) / <alpha-value>)",
+        "ink-mute": "rgb(var(--ink-mute-rgb) / <alpha-value>)",
+        teal: "rgb(var(--teal-rgb) / <alpha-value>)",
+        "teal-text": "rgb(var(--teal-text-rgb) / <alpha-value>)",
+        aqua: "rgb(var(--aqua-rgb) / <alpha-value>)",
+        deep: "rgb(var(--deep-rgb) / <alpha-value>)",
+        frost: "rgb(var(--frost-rgb) / <alpha-value>)",
       },
       fontFamily: {
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
-        body: ["var(--font-body)", "system-ui", "sans-serif"],
+        display: ["var(--font-archivo)", "system-ui", "sans-serif"],
+        body: ["var(--font-archivo)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       borderRadius: {

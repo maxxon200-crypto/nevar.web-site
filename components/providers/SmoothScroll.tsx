@@ -50,6 +50,7 @@ export default function SmoothScroll({
       window.clearTimeout(t);
       window.removeEventListener("load", refresh);
       gsap.ticker.remove(raf);
+      gsap.ticker.lagSmoothing(500, 33); // restore GSAP's default
       lenis.destroy();
     };
   }, []);

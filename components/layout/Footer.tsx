@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
+import EmailLink from "@/components/ui/EmailLink";
 import CookiePrefsButton from "@/components/cookie/CookiePrefsButton";
 import { nav, site } from "@/data/site";
 import { ArrowUpRight } from "@/components/ui/icons";
@@ -18,13 +19,12 @@ export default function Footer() {
               Studio di design e sviluppo a {site.city}. Siti web e app su
               misura, fatti a mano.
             </p>
-            <a
-              href={site.emailHref}
-              className="mt-5 inline-flex items-center gap-1.5 font-mono text-sm text-ink transition-colors hover:text-teal-text"
-            >
-              <span className="link-underline">{site.email}</span>
-              <ArrowUpRight size={14} />
-            </a>
+            <div className="mt-5">
+              <EmailLink className="inline-flex items-center gap-1.5 font-mono text-sm text-ink transition-colors hover:text-teal-text">
+                <span className="link-underline">{site.email}</span>
+                <ArrowUpRight size={14} />
+              </EmailLink>
+            </div>
           </div>
 
           {/* Link columns */}
@@ -72,7 +72,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-4 border-t border-frost/40 pt-6 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-mute sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-4 border-t border-frost/40 pt-6 font-mono text-xs uppercase tracking-[0.16em] text-ink-mute sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {site.name}
           </p>

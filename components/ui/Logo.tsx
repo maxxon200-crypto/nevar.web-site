@@ -13,7 +13,7 @@ export default function Logo({
   return (
     <span
       className={`font-display inline-flex items-baseline leading-none ${size} ${className}`}
-      style={{ fontVariationSettings: '"wght" 620, "wdth" 112' }}
+      style={{ fontVariationSettings: '"wght" 800, "wdth" 125' }}
     >
       nevar<span className="text-teal-text">.web</span>
     </span>

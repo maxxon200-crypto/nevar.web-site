@@ -23,6 +23,7 @@ export default function GlassStage() {
   const [inView, setInView] = useState(false);
   const [active, setActive] = useState(false);
   const [manual, setManual] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // One-time capability probe.
   useEffect(() => {
@@ -46,10 +47,13 @@ export default function GlassStage() {
       webgl = false;
     }
 
-    setCaps({ webgl, reduce, lowEnd: small || lowCPU || lowMem });
+    // Phones/tablets keep the poster for battery + LCP. On desktop we only fall
+    // back to the poster when the device is genuinely constrained (few cores AND
+    // little memory), so a normal laptop actually gets the glass.
+    setCaps({ webgl, reduce, lowEnd: small || (lowCPU && lowMem) });
   }, []);
 
-  // Mount only while in the viewport.
+  // Track viewport visibility (drives first mount + frame-loop pause/resume).
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -70,15 +74,22 @@ export default function GlassStage() {
       requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
       cancelIdleCallback?: (id: number) => void;
     };
-    const schedule =
-      w.requestIdleCallback || ((cb: () => void) => window.setTimeout(cb, 500));
-    const id = schedule(() => setActive(true), { timeout: 1400 });
+    const useIdle = typeof w.requestIdleCallback === "function";
+    const id = useIdle
+      ? w.requestIdleCallback!(() => setActive(true), { timeout: 1400 })
+      : window.setTimeout(() => setActive(true), 500);
     return () => {
-      if (w.cancelIdleCallback) w.cancelIdleCallback(id as number);
+      if (useIdle) w.cancelIdleCallback?.(id);
+      else window.clearTimeout(id);
     };
   }, [capable, inView, active]);
 
-  const showCanvas = (active || manual) && inView;
+  // Once we decide to show the canvas, keep it mounted (avoid recompiling the
+  // heavy transmission material on every scroll); we only pause its frame loop.
+  useEffect(() => {
+    if ((active || manual) && inView) setMounted(true);
+  }, [active, manual, inView]);
+
   // Offer manual opt-in only when WebGL exists, motion is allowed, and we chose
   // the poster by default for performance (mobile / low-end).
   const offerOptIn = caps.webgl && !caps.reduce && caps.lowEnd && !manual;
@@ -86,16 +97,16 @@ export default function GlassStage() {
   return (
     <div ref={ref} className="relative h-full w-full">
       <div
-        className={`absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          showCanvas ? "opacity-0" : "opacity-100"
+        className={`absolute inset-0 motion-safe:animate-float-slow transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          mounted ? "opacity-0" : "opacity-100"
         }`}
       >
         <HeroPoster className="h-full w-full drop-shadow-[0_30px_60px_rgba(39,121,167,0.18)]" />
       </div>
 
-      {showCanvas ? (
+      {mounted ? (
         <div className="absolute inset-0 animate-[fade-up_1s_cubic-bezier(0.22,1,0.36,1)_both]">
-          <GlassOrb />
+          <GlassOrb paused={!inView} />
         </div>
       ) : null}
 
@@ -103,7 +114,7 @@ export default function GlassStage() {
         <button
           type="button"
           onClick={() => setManual(true)}
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-pill border border-frost/60 bg-white/60 px-4 py-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft backdrop-blur-md transition hover:border-teal"
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-pill border border-frost/60 bg-white/60 px-4 py-2 font-mono text-xs uppercase tracking-[0.2em] text-ink-soft backdrop-blur-md transition-colors hover:border-teal hover:text-teal-text"
         >
           Attiva effetto vetro
         </button>

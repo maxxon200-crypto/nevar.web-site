@@ -23,7 +23,7 @@ export default function Pagamenti() {
                 {payment.methods.map((m) => (
                   <span
                     key={m}
-                    className="rounded-pill border border-frost/60 bg-white/50 px-4 py-1.5 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-ink-soft"
+                    className="rounded-pill border border-frost/60 bg-white/50 px-4 py-1.5 font-mono text-xs uppercase tracking-[0.16em] text-ink-soft"
                   >
                     {m}
                   </span>
@@ -42,19 +42,19 @@ export default function Pagamenti() {
               <p className="label-mono">Dati per il pagamento</p>
               <dl className="mt-5 flex flex-col gap-4 font-mono text-sm">
                 <div className="flex flex-col gap-1">
-                  <dt className="text-[0.68rem] uppercase tracking-[0.16em] text-ink-mute">
+                  <dt className="text-xs uppercase tracking-[0.16em] text-ink-mute">
                     Intestatario
                   </dt>
                   <dd className="text-ink">{owner.name}</dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-[0.68rem] uppercase tracking-[0.16em] text-ink-mute">
+                  <dt className="text-xs uppercase tracking-[0.16em] text-ink-mute">
                     Codice fiscale
                   </dt>
                   <dd className="text-ink-mute">{owner.codiceFiscale}</dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-[0.68rem] uppercase tracking-[0.16em] text-ink-mute">
+                  <dt className="text-xs uppercase tracking-[0.16em] text-ink-mute">
                     IBAN
                   </dt>
                   <dd className="text-ink-mute">{owner.iban}</dd>

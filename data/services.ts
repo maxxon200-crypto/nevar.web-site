@@ -20,13 +20,13 @@ export const services: Service[] = [
     kind: "SVILUPPO WEB",
     title: "Siti su misura",
     summary:
-      "Dalla vetrina one-page al progetto bespoke con motion e WebGL. Costruiti a mano, veloci, pensati per convertire.",
+      "Dalla vetrina one-page al progetto su misura con animazioni e WebGL. Costruiti a mano, veloci, pensati per convertire.",
     points: [
       "Mobile-first, ottimizzati per velocità e Core Web Vitals",
       "CMS quando serve aggiornare i contenuti in autonomia",
       "SEO tecnica, copywriting e integrazioni (Maps, WhatsApp, form)",
     ],
-    priceHint: "da €690",
+    priceHint: "da 690 €",
   },
   {
     id: "app",
@@ -40,7 +40,7 @@ export const services: Service[] = [
       "Backend, autenticazione e pannello di gestione",
       "Preventivo su misura in base alle funzionalità",
     ],
-    priceHint: "da €6.900",
+    priceHint: "da 6.900 €",
   },
   {
     id: "care",
@@ -54,6 +54,6 @@ export const services: Service[] = [
       "Hosting gestito e piccole modifiche incluse",
       "Un riferimento diretto, senza ticket anonimi",
     ],
-    priceHint: "da €49 / mese",
+    priceHint: "da 49 € / mese",
   },
 ];

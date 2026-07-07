@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Logo from "@/components/ui/Logo";
@@ -10,6 +10,8 @@ import { ArrowRight } from "@/components/ui/icons";
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -23,6 +25,33 @@ export default function Header() {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Close the menu (and release the scroll lock) when crossing to desktop, where
+  // the toggle and overlay are hidden and could otherwise strand the lock.
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const onChange = () => {
+      if (mq.matches) setOpen(false);
+    };
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // While open: Escape closes, focus moves into the menu, and returns to the
+  // toggle on close.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    firstLinkRef.current?.focus();
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      toggleRef.current?.focus();
     };
   }, [open]);
 
@@ -45,7 +74,7 @@ export default function Header() {
               <a
                 key={item.href}
                 href={item.href}
-                className="link-underline font-mono text-[0.72rem] uppercase tracking-[0.16em] text-ink-soft transition-colors hover:text-ink"
+                className="link-underline font-mono text-xs uppercase tracking-[0.16em] text-ink-soft transition-colors hover:text-ink"
               >
                 {item.label}
               </a>
@@ -61,9 +90,11 @@ export default function Header() {
 
           {/* Mobile toggle */}
           <button
+            ref={toggleRef}
             type="button"
             aria-label={open ? "Chiudi menu" : "Apri menu"}
             aria-expanded={open}
+            aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
             className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-[5px] md:hidden"
           >
@@ -90,6 +121,10 @@ export default function Header() {
       <AnimatePresence>
         {open ? (
           <motion.div
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu di navigazione"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -103,6 +138,7 @@ export default function Header() {
               {nav.map((item, i) => (
                 <motion.a
                   key={item.href}
+                  ref={i === 0 ? firstLinkRef : undefined}
                   href={item.href}
                   onClick={() => setOpen(false)}
                   initial={{ opacity: 0, y: 14 }}

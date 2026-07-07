@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import GlassCard from "@/components/ui/GlassCard";
 import Reveal from "@/components/ui/Reveal";
+import EmailLink from "@/components/ui/EmailLink";
 import { ArrowRight, Check, Mail } from "@/components/ui/icons";
 import { site } from "@/data/site";
 
@@ -126,19 +127,16 @@ export default function Contatto() {
             </div>
 
             <Reveal delay={0.1}>
-              <a
-                href={site.emailHref}
-                className="group inline-flex items-center gap-3 font-mono text-base text-ink transition-colors hover:text-teal-text"
-              >
+              <EmailLink className="group inline-flex items-center gap-3 font-mono text-base text-ink transition-colors hover:text-teal-text">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full border border-frost/60 bg-white/50 text-teal-text transition-colors group-hover:border-teal">
                   <Mail size={16} />
                 </span>
                 <span className="link-underline">{site.email}</span>
-              </a>
+              </EmailLink>
             </Reveal>
 
             <Reveal delay={0.15}>
-              <p className="font-mono text-[0.7rem] leading-relaxed text-ink-mute">
+              <p className="font-mono text-xs uppercase leading-relaxed tracking-[0.16em] text-ink-mute">
                 STUDIO / {site.city.toUpperCase()}
                 <br />
                 {site.country.toUpperCase()}

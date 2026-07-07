@@ -53,7 +53,7 @@ export default function Servizi() {
                     </span>
                     <a
                       href="#prezzi"
-                      className="inline-flex items-center gap-1.5 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-ink-mute transition-colors hover:text-teal-text"
+                      className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.16em] text-ink-mute transition-colors hover:text-teal-text"
                     >
                       Prezzi
                       <ArrowRight size={13} />

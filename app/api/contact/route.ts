@@ -32,8 +32,12 @@ export async function POST(req: Request) {
   const budget = (data.budget ?? "").trim();
   const messaggio = (data.messaggio ?? "").trim();
 
-  // Honeypot: bots fill hidden fields. Pretend success, send nothing.
+  // Honeypot: bots fill hidden fields. Pretend success, send nothing. Log it so
+  // a legitimate submission caught by mistake can still be recovered.
   if (data.website) {
+    console.warn(
+      `[contact] honeypot triggered (nome=${(data.nome ?? "").slice(0, 60)}, email=${(data.email ?? "").slice(0, 80)})`
+    );
     return NextResponse.json({ ok: true });
   }
 

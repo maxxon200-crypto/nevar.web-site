@@ -11,12 +11,12 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden pb-16 pt-28"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-4 pb-20 pt-28"
     >
       <div className="shell flex w-full flex-col items-center">
         {/* Panel eyebrow */}
         <div
-          className="mb-3 flex items-center gap-3 opacity-0 animate-fade-up"
+          className="mb-8 flex items-center gap-3 opacity-0 animate-fade-up sm:mb-10"
           style={{ animationDelay: "0.1s" }}
         >
           <span className="label-mono">STUDIO</span>
@@ -26,23 +26,36 @@ export default function Hero() {
           <span className="label-mono">WEB &amp; APP</span>
         </div>
 
-        {/* Liquid-glass orb */}
-        <div className="relative aspect-square w-[min(80vw,30rem)] shrink-0">
-          <GlassStage />
+        {/* Liquid-glass orb, floating over a soft cold halo */}
+        <div className="relative aspect-square w-[min(78vw,29rem)] shrink-0">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-[16%] rounded-full opacity-80 blur-2xl"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 44%, rgba(255,255,255,0.85), rgba(73,197,182,0.16) 52%, rgba(0,158,201,0.12) 72%, transparent 80%)",
+            }}
+          />
+          <div className="relative h-full w-full">
+            <GlassStage />
+          </div>
         </div>
 
-        {/* Wordmark - single h1, paints immediately */}
-        <h1 className="display-hero -mt-4 text-center text-ink sm:-mt-8">
+        {/* Wordmark - single h1, paints immediately, given room to breathe */}
+        <h1 className="display-hero mt-10 text-center text-ink sm:mt-12">
           nevar<span className="text-teal-text">.web</span>
         </h1>
 
-        <p className="mt-7 max-w-xl text-balance text-center text-lg leading-relaxed text-ink-soft">
-          Progettiamo e sviluppiamo siti web e app su misura per attività
-          italiane. Bianco, veloce, fatto a mano a Milano.
+        <p
+          className="mt-7 max-w-2xl text-balance text-center text-ink-soft"
+          style={{ fontSize: "clamp(17px, 1.5vw, 20px)", lineHeight: 1.55 }}
+        >
+          Progetto e sviluppo siti web e app su misura per attività italiane.
+          Bianco, veloce, fatto a mano a Milano.
         </p>
 
         <div
-          className="mt-9 flex flex-wrap items-center justify-center gap-3 opacity-0 animate-fade-up"
+          className="mt-10 flex flex-wrap items-center justify-center gap-3 opacity-0 animate-fade-up"
           style={{ animationDelay: "0.25s" }}
         >
           <Magnetic>
@@ -64,10 +77,13 @@ export default function Hero() {
         className="group absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 opacity-0 animate-fade-up"
         style={{ animationDelay: "0.5s" }}
       >
-        <span className="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-ink-mute">
+        <span className="font-mono text-xs uppercase tracking-[0.24em] text-teal-text">
           Scorri
         </span>
-        <ArrowDown className="text-ink-mute transition-transform duration-500 group-hover:translate-y-1" />
+        <ArrowDown
+          size={16}
+          className="text-teal-text transition-transform duration-500 group-hover:translate-y-1"
+        />
       </a>
     </section>
   );

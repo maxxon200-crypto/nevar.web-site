@@ -79,7 +79,7 @@ export default function CookieBanner() {
                   <button
                     type="button"
                     onClick={() => decide(true)}
-                    className="btn-primary !py-2.5"
+                    className="btn-ghost !py-2.5"
                   >
                     Accetta
                   </button>
@@ -116,7 +116,7 @@ export default function CookieBanner() {
                         Necessari, sempre attivi.
                       </p>
                     </div>
-                    <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ink-mute">
+                    <span className="font-mono text-xs uppercase tracking-[0.16em] text-ink-mute">
                       Attivi
                     </span>
                   </li>
@@ -152,6 +152,13 @@ export default function CookieBanner() {
                     className="btn-ghost !py-2.5"
                   >
                     Accetta tutto
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => decide(false)}
+                    className="btn-ghost !py-2.5"
+                  >
+                    Rifiuta tutto
                   </button>
                 </div>
               </>

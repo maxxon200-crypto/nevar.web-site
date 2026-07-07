@@ -20,7 +20,7 @@ export default function Metodo() {
                 <div className="flex items-baseline justify-between">
                   <span
                     className="font-display text-4xl text-teal-text"
-                    style={{ fontVariationSettings: '"wght" 600, "wdth" 120' }}
+                    style={{ fontVariationSettings: '"wght" 800, "wdth" 125' }}
                   >
                     {s.n}
                   </span>
