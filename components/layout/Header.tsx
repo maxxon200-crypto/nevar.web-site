@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Logo from "@/components/ui/Logo";
 import SheenLink from "@/components/ui/SheenLink";
@@ -13,6 +14,12 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+
+  // Section links are home anchors. Off the home page (Privacy, Cookie) they
+  // must first return home, so the anchor is prefixed with "/".
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const anchor = (href: string) => (isHome ? href : `/${href}`);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -66,7 +73,11 @@ export default function Header() {
         }`}
       >
         <div className="shell flex h-16 items-center justify-between md:h-[4.5rem]">
-          <Link href="#top" aria-label="nevar.web, torna in cima" className="relative z-50">
+          <Link
+            href={isHome ? "#top" : "/"}
+            aria-label="nevar.web, torna alla home"
+            className="relative z-50"
+          >
             <Logo />
           </Link>
 
@@ -74,7 +85,7 @@ export default function Header() {
             {nav.map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href={anchor(item.href)}
                 className="link-underline font-body text-xs font-medium uppercase tracking-[0.16em] text-ink-soft transition-colors hover:text-ink"
               >
                 {item.label}
@@ -83,7 +94,7 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:block">
-            <SheenLink href="#contatto" className="btn-primary !px-5 !py-2.5">
+            <SheenLink href={anchor("#contatto")} className="btn-primary !px-5 !py-2.5">
               <span>Preventivo</span>
               <ArrowRight size={14} />
             </SheenLink>
@@ -140,7 +151,7 @@ export default function Header() {
                 <motion.a
                   key={item.href}
                   ref={i === 0 ? firstLinkRef : undefined}
-                  href={item.href}
+                  href={anchor(item.href)}
                   onClick={() => setOpen(false)}
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -151,7 +162,7 @@ export default function Header() {
                 </motion.a>
               ))}
               <motion.a
-                href="#contatto"
+                href={anchor("#contatto")}
                 onClick={() => setOpen(false)}
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}

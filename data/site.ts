@@ -30,13 +30,12 @@ export const site = {
 } as const;
 
 /**
- * Persona fisica senza Partita IVA. Il nome è fornito; gli altri campi restano
- * segnaposto da completare (codice fiscale, IBAN, indirizzo opzionale).
+ * Persona fisica senza Partita IVA. Il nome è fornito; l'indirizzo resta un
+ * segnaposto opzionale usato solo nella Privacy Policy. I dati di pagamento
+ * (IBAN, codice fiscale) non sono esposti sul sito pubblico.
  */
 export const owner = {
   name: "Rocco Maruotti",
-  codiceFiscale: "[CODICE FISCALE]",
-  iban: "[IBAN]",
   address: "[INDIRIZZO (opzionale)]",
 } as const;
 

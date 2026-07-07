@@ -91,13 +91,3 @@ export const extraOffers = [
       "Manutenzione, aggiornamenti, hosting gestito, piccole modifiche, backup e monitoraggio. Un canone leggero perché il progetto non invecchi da solo.",
   },
 ] as const;
-
-/** Payment terms (fase senza Partita IVA). */
-export const payment = {
-  methods: ["Bonifico bancario", "PayPal"],
-  deposit: "Acconto 40% all'avvio, saldo alla consegna.",
-  note:
-    "Le prestazioni sono fatturate tramite ricevuta di prestazione occasionale (attività non abituale, senza Partita IVA).",
-  noCheckout:
-    "Nessun checkout automatico in questa fase: il pagamento si concorda via email dopo il preventivo.",
-};

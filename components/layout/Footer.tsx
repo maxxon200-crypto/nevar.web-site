@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "@/components/ui/Logo";
 import EmailLink from "@/components/ui/EmailLink";
 import CookiePrefsButton from "@/components/cookie/CookiePrefsButton";
@@ -7,6 +10,11 @@ import { ArrowUpRight } from "@/components/ui/icons";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+
+  // Same rule as the header: section links must return home from Privacy/Cookie.
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const anchor = (href: string) => (isHome ? href : `/${href}`);
 
   return (
     <footer className="relative mt-8 border-t border-frost/40">
@@ -35,7 +43,7 @@ export default function Footer() {
                 {nav.map((item) => (
                   <li key={item.href}>
                     <a
-                      href={item.href}
+                      href={anchor(item.href)}
                       className="text-sm text-ink-soft transition-colors hover:text-teal-text"
                     >
                       {item.label}

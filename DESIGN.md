@@ -147,7 +147,7 @@ Easing condiviso: `cubic-bezier(0.22, 1, 0.36, 1)` (CSS e JS, `lib/motion.ts`).
 app/
   layout.tsx          root: metadata, font, JSON-LD, header/footer, providers
   page.tsx            home one-page (Hero, Manifesto, Servizi, Prezzi,
-                      Pagamenti, Metodo, Contatto)
+                      Metodo, Contatto)
   privacy/            Privacy Policy (GDPR)
   cookie-policy/      Cookie Policy
   api/contact/        API route -> email (Resend) con fallback mailto
@@ -200,11 +200,11 @@ sostituisci `<Logo />` con `<img src="/logo.svg" alt="nevar.web" />`
 Cerca questi valori e completali:
 
 - `data/site.ts`
-  - `owner.codiceFiscale` -> `[CODICE FISCALE]`
-  - `owner.iban` -> `[IBAN]`
-  - `owner.address` -> `[INDIRIZZO - opzionale]` (opzionale)
+  - `owner.address` -> `[INDIRIZZO - opzionale]` (opzionale, solo Privacy)
   - `site.url` -> dominio di produzione reale (ora `https://nevar.web`)
   - `owner.name` è precompilato con **Rocco Maruotti** (dal brief): conferma.
+- I dati di pagamento (IBAN, codice fiscale, metodi) non sono più esposti sul
+  sito pubblico: si concordano via email dopo il preventivo.
 - Privacy Policy: usa i valori sopra; conferma titolare e indirizzo.
 - Email invio form: imposta le env `RESEND_API_KEY` e `CONTACT_FROM` su Vercel
   per l'invio reale. Senza queste, il form usa automaticamente il fallback
