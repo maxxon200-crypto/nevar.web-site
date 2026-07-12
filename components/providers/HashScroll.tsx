@@ -24,12 +24,19 @@ export default function HashScroll() {
     }
     if (!el) return;
 
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
     const id = window.setTimeout(() => {
       const lenis = getLenis();
-      if (lenis) {
+      if (lenis && !reduce) {
         lenis.scrollTo(el as HTMLElement, { offset: 0 });
       } else {
-        (el as HTMLElement).scrollIntoView({ behavior: "smooth" });
+        // Under reduced motion (or without Lenis) jump without animating.
+        (el as HTMLElement).scrollIntoView({
+          behavior: reduce ? "auto" : "smooth",
+        });
       }
     }, 300);
 

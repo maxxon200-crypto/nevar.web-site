@@ -358,7 +358,9 @@
     transition: border-color 0.3s ease;
   }
   .field::placeholder {
-    color: rgba(85, 96, 105, 0.6);
+    /* Full muted: still visibly lighter than the ink input text, but readable
+       (5.9:1 on white). Real labels exist above every field regardless. */
+    color: var(--muted);
   }
   .field:focus {
     border-color: var(--slate);

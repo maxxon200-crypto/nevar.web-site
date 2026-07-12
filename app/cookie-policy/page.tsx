@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import LegalShell from "@/components/legal/LegalShell";
 import CookiePrefsButton from "@/components/cookie/CookiePrefsButton";
+import EmailLink from "@/components/ui/EmailLink";
 import { site, lastUpdated } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -78,7 +79,7 @@ export default function CookiePolicyPage() {
       <p>
         Il titolare del trattamento è indicato nella{" "}
         <a href="/privacy">Privacy Policy</a>. Per qualsiasi richiesta scrivi a{" "}
-        <a href={site.emailHref}>{site.email}</a>.
+        <EmailLink>{site.email}</EmailLink>.
       </p>
 
       <h2>6. Aggiornamenti</h2>

@@ -47,11 +47,33 @@ export default function Header() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // While open: Escape closes, focus moves into the menu, returns on close.
+  // While open: Escape closes, Tab stays trapped between the toggle and the
+  // menu links, focus moves into the menu and returns to the toggle on close.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const focusables = [
+        toggleRef.current,
+        ...Array.from(
+          document.querySelectorAll<HTMLElement>("#mobile-menu a")
+        ),
+      ].filter(Boolean) as HTMLElement[];
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && (active === first || !focusables.includes(active!))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     firstLinkRef.current?.focus();

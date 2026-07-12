@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import LegalShell from "@/components/legal/LegalShell";
+import EmailLink from "@/components/ui/EmailLink";
 import { owner, site, lastUpdated } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default function PrivacyPage() {
       </p>
       <ul>
         <li>
-          Email: <a href={site.emailHref}>{site.email}</a>
+          Email: <EmailLink>{site.email}</EmailLink>
         </li>
         {!owner.address.startsWith("[") ? (
           <li>Indirizzo: {owner.address}</li>
@@ -147,7 +148,7 @@ export default function PrivacyPage() {
         </li>
       </ul>
       <p>
-        Per esercitarli scrivi a <a href={site.emailHref}>{site.email}</a>.
+        Per esercitarli scrivi a <EmailLink>{site.email}</EmailLink>.
         Ricevuta la richiesta, rispondo senza ingiustificato ritardo e comunque
         entro un mese.
       </p>
