@@ -3,8 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  // three.js ships untranspiled ESM in a few sub-paths; let Next transpile it.
-  transpilePackages: ["three"],
   eslint: {
     // Lint is run explicitly in CI; do not fail production builds on lint.
     ignoreDuringBuilds: true,

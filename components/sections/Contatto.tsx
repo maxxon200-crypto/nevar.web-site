@@ -207,7 +207,7 @@ export default function Contatto() {
                         errors.messaggio ? "messaggio-err" : undefined
                       }
                       className="field resize-none"
-                      placeholder="Raccontami dello studio e di cosa avete bisogno."
+                      placeholder="Raccontami dello studio e di cosa hai bisogno."
                     />
                     {errors.messaggio ? (
                       <FieldError id="messaggio-err">
