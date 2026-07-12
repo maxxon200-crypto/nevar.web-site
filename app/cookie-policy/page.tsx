@@ -66,7 +66,7 @@ export default function CookiePolicyPage() {
         pannello dedicato:
       </p>
       <p>
-        <CookiePrefsButton className="btn-ghost !py-2.5" />
+        <CookiePrefsButton className="btn-small" />
       </p>
       <p>
         Puoi inoltre gestire e cancellare i cookie tecnici direttamente dalle

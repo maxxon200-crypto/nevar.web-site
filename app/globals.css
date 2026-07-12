@@ -4,42 +4,28 @@
 
 /* ============================================================================
    nevar.web - design tokens (single source of truth, mirrored in DESIGN.md)
-   Cold white dominant. Teal / aqua / cyan appear only as light, reflection and
-   CTA. Never as a large flat field.
+   Warm paper white, grey-blue atmosphere, one slate accent. Editorial and
+   printed, never generated: sharp corners, 1px hairlines, film grain.
    ========================================================================== */
 :root {
-  --paper: #f4f7f7; /* cold white, dominant background */
-  --paper-pure: #ffffff;
-  --ink: #0b1416; /* near-black, cold */
-  --ink-soft: #24343a; /* secondary text */
-  --ink-mute: #4d5d66; /* captions, metadata (AA-safe over the cold wash) */
-  --teal: #009ec9; /* primary accent (ref. Neko) - light / graphic use */
-  --teal-text: #0e7391; /* AA-safe teal for text/links on paper (>= 4.5:1) */
-  --aqua: #49c5b6; /* secondary accent (ref. Kubota) */
-  --deep: #2779a7; /* deep blue for depth / gradient */
-  --frost: #b6bac5; /* cold blue-grey, borders / glass (ref. Igloo) */
-  --glass-tint: rgba(73, 197, 182, 0.1); /* glass veil */
+  --paper: #f6f5f2; /* warm white, base */
+  --mid: #e4e8eb; /* medium grey-blue */
+  --deep: #cbd5da; /* deep grey-blue */
+  --ink: #16191c; /* text, soft black, never pure */
+  --muted: #556069; /* secondary text */
+  --slate: #4e6a78; /* the only accent */
 
   /* Same palette as space-separated RGB channels. Tailwind reads these so the
-     /opacity modifier works (e.g. bg-teal/70). Keep in sync with the hex above. */
-  --paper-rgb: 244 247 247;
-  --paper-pure-rgb: 255 255 255;
-  --ink-rgb: 11 20 22;
-  --ink-soft-rgb: 36 52 58;
-  --ink-mute-rgb: 77 93 102;
-  --teal-rgb: 0 158 201;
-  --teal-text-rgb: 14 115 145;
-  --aqua-rgb: 73 197 182;
-  --deep-rgb: 39 121 167;
-  --frost-rgb: 182 186 197;
+     /opacity modifier works. Keep in sync with the hex above. */
+  --paper-rgb: 246 245 242;
+  --mid-rgb: 228 232 235;
+  --deep-rgb: 203 213 218;
+  --ink-rgb: 22 25 28;
+  --muted-rgb: 85 96 105;
+  --slate-rgb: 78 106 120;
 
-  /* Derived, used across surfaces */
-  --glass-fill: rgba(255, 255, 255, 0.55);
-  --glass-fill-strong: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(182, 186, 197, 0.55);
-  --glass-specular: rgba(255, 255, 255, 0.85);
-  --hairline: rgba(11, 20, 22, 0.08);
-  --shadow-cold: rgba(39, 121, 167, 0.22);
+  /* 1px hairline, the only divider */
+  --line: rgba(22, 25, 28, 0.12);
 
   --shell: 1240px;
   --gutter: clamp(1.25rem, 5vw, 3.5rem);
@@ -52,7 +38,7 @@
    ------------------------------------------------------------------------ */
 @layer base {
   * {
-    border-color: var(--hairline);
+    border-color: var(--line);
   }
 
   html {
@@ -75,37 +61,22 @@
   body {
     background-color: var(--paper);
     color: var(--ink);
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
     font-weight: 400;
-    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
 
-  /* Cold, quiet radial wash that keeps the page paper-dominant */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-      radial-gradient(120% 80% at 82% -10%, rgba(73, 197, 182, 0.12), transparent 55%),
-      radial-gradient(90% 70% at 8% 110%, rgba(0, 158, 201, 0.08), transparent 60%),
-      var(--paper);
-  }
-
   ::selection {
-    background: rgba(0, 158, 201, 0.18);
+    background: rgba(78, 106, 120, 0.22);
     color: var(--ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--teal-text);
+    outline: 2px solid var(--slate);
     outline-offset: 3px;
-    border-radius: 4px;
   }
 
   a {
@@ -124,302 +95,23 @@
     text-wrap: pretty;
   }
 
-  /* Subtle cold scrollbar */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(182, 186, 197, 0.6);
+    background: rgba(22, 25, 28, 0.22);
     border-radius: 999px;
     border: 2px solid var(--paper);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(122, 133, 143, 0.7);
+    background: rgba(22, 25, 28, 0.35);
   }
 }
 
-/* --------------------------------------------------------------------------
-   Typography scale - Archivo Expanded for display and prices (wght 800,
-   wdth 125), Geist for everything else (body, UI, labels). No monospace.
-   Display classes force wght + wdth via variation-settings so the width never
-   resets to normal; font-weight is kept in step for the fallback face.
-   ------------------------------------------------------------------------ */
 @layer components {
-  .font-display {
-    font-family: var(--font-archivo), system-ui, sans-serif;
-    font-weight: 800;
-    font-variation-settings: "wght" 800, "wdth" 125;
-  }
-  /* Legacy utility name kept for the existing markup: now Geist medium so the
-     panel labels read as UI microcopy rather than monospace. */
-  .font-mono {
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
-    font-weight: 500;
-  }
-
-  .display-hero {
-    font-family: var(--font-archivo), system-ui, sans-serif;
-    font-weight: 800;
-    font-variation-settings: "wght" 800, "wdth" 125;
-    /* Reduced ~29% (max 8.5rem -> 6rem) so the hero CTAs stay above the fold
-       on a laptop without touching the WebGL sphere. */
-    font-size: clamp(2.25rem, 7vw, 6rem);
-    line-height: 0.92;
-    letter-spacing: -0.01em;
-  }
-
-  .display-xl {
-    font-family: var(--font-archivo), system-ui, sans-serif;
-    font-weight: 800;
-    font-variation-settings: "wght" 800, "wdth" 125;
-    font-size: clamp(2.25rem, 5.4vw, 4rem);
-    line-height: 0.98;
-    letter-spacing: -0.005em;
-  }
-
-  .display-lg {
-    font-family: var(--font-archivo), system-ui, sans-serif;
-    font-weight: 800;
-    font-variation-settings: "wght" 800, "wdth" 125;
-    font-size: clamp(1.6rem, 3vw, 2.35rem);
-    line-height: 1.02;
-  }
-
-  .display-md {
-    font-family: var(--font-archivo), system-ui, sans-serif;
-    font-weight: 800;
-    font-variation-settings: "wght" 800, "wdth" 125;
-    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
-    line-height: 1.1;
-  }
-
-  /* Panel microcopy: coordinates, codes, eyebrows, labels. Geist medium,
-     uppercase, tracked. Never below 12px. */
-  .label-mono {
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
-    font-size: clamp(13px, 1.1vw, 15px);
-    font-weight: 500;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-
-  /* Prices share the Expanded display look of the tier names above them. */
-  .price-mono {
-    font-family: var(--font-archivo), system-ui, sans-serif;
-    font-weight: 800;
-    font-variation-settings: "wght" 800, "wdth" 125;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.01em;
-  }
-
-  /* Glass disc holding the Metodo phase icons */
-  .metodo-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: radial-gradient(
-      120% 120% at 30% 20%,
-      rgba(255, 255, 255, 0.92),
-      rgba(73, 197, 182, 0.14)
-    );
-    border: 1px solid rgba(182, 186, 197, 0.6);
-    box-shadow:
-      inset 0 1px 2px rgba(255, 255, 255, 0.9),
-      0 10px 24px -14px rgba(0, 158, 201, 0.65);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .metodo-icon svg {
-    width: 34px;
-    height: 34px;
-  }
-
-  /* Vetro M2: glass card for the Metodo phases, with a teal/aqua reflection
-     that sweeps across on hover. Content is lifted above the reflection. */
-  .metodo-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 22px;
-    padding: 26px 22px;
-    background: linear-gradient(
-      160deg,
-      rgba(255, 255, 255, 0.9),
-      rgba(240, 248, 248, 0.72)
-    );
-    border: 1px solid rgba(182, 186, 197, 0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 18px 44px -30px rgba(39, 121, 167, 0.5);
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
-  }
-  .metodo-card > * {
-    position: relative;
-    z-index: 1;
-  }
-  .metodo-card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 80%;
-    height: 100%;
-    background: linear-gradient(
-      115deg,
-      transparent,
-      rgba(73, 197, 182, 0.25),
-      rgba(0, 158, 201, 0.12),
-      transparent
-    );
-    transform: skewX(-18deg);
-    transition: left 0.6s ease;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .metodo-card:hover::after {
-    left: 130%;
-  }
-  .metodo-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 34px 60px -30px rgba(0, 158, 201, 0.6);
-  }
-
-  /* Same vetro reflection on the pricing and service cards (both are .glass
-     surfaces, whose ::after is the specular edge, so the sweep uses ::before).
-     Keeps their existing background, border, tint and featured look. */
-  .pricing-card,
-  .service-card {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
-  }
-  .pricing-card > *,
-  .service-card > * {
-    position: relative;
-    z-index: 1;
-  }
-  .pricing-card::before,
-  .service-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 80%;
-    height: 100%;
-    background: linear-gradient(
-      115deg,
-      transparent,
-      rgba(73, 197, 182, 0.25),
-      rgba(0, 158, 201, 0.12),
-      transparent
-    );
-    transform: skewX(-18deg);
-    transition: left 0.6s ease;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .pricing-card:hover::before,
-  .service-card:hover::before {
-    left: 130%;
-  }
-  .pricing-card:hover,
-  .service-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 34px 60px -30px rgba(0, 158, 201, 0.6);
-  }
-  /* The featured pricing card stays raised on desktop; hover lifts it further. */
-  @media (min-width: 1024px) {
-    .pricing-card--featured {
-      transform: translateY(-12px);
-    }
-    .pricing-card--featured:hover {
-      transform: translateY(-20px);
-    }
-  }
-
-  /* Glass disc for the Servizi icons (smaller than the Metodo one). */
-  .service-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: radial-gradient(
-      120% 120% at 30% 20%,
-      rgba(255, 255, 255, 0.92),
-      rgba(73, 197, 182, 0.14)
-    );
-    border: 1px solid rgba(182, 186, 197, 0.6);
-    box-shadow:
-      inset 0 1px 2px rgba(255, 255, 255, 0.9),
-      0 10px 24px -14px rgba(0, 158, 201, 0.65);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .service-icon svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  /* Small unit suffix (e.g. "/ mese") beside a large price: back to Geist so
-     the big Archivo number stays the focus and the row never breaks awkwardly. */
-  .price-unit {
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
-    font-variation-settings: normal;
-    font-weight: 500;
-    font-size: 0.6em;
-    letter-spacing: 0.02em;
-    color: var(--ink-mute);
-  }
-
   /* ------------------------------------------------------------------------
-     Liquid Glass surface
-     ---------------------------------------------------------------------- */
-  .glass {
-    position: relative;
-    background: linear-gradient(
-      180deg,
-      var(--glass-fill-strong),
-      var(--glass-fill)
-    );
-    border: 1px solid var(--glass-border);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    backdrop-filter: blur(20px) saturate(140%);
-    box-shadow:
-      0 1px 0 0 var(--glass-specular) inset,
-      0 24px 60px -30px var(--shadow-cold);
-  }
-
-  /* Inner specular highlight along the top edge (Liquid Glass) */
-  .glass::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    pointer-events: none;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.9),
-      rgba(255, 255, 255, 0) 40%
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0.7;
-  }
-
-  .glass-tint {
-    background:
-      linear-gradient(180deg, var(--glass-fill-strong), var(--glass-fill)),
-      var(--glass-tint);
-  }
-
-  /* ------------------------------------------------------------------------
-     Layout helpers
+     Layout
      ---------------------------------------------------------------------- */
   .shell {
     width: 100%;
@@ -429,104 +121,273 @@
   }
 
   .section {
-    padding-block: clamp(5rem, 12vh, 9rem);
+    padding-block: clamp(4.5rem, 11vh, 8.5rem);
     position: relative;
   }
 
-  .hairline {
-    height: 1px;
-    width: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--frost),
-      transparent
-    );
-    opacity: 0.6;
+  /* ------------------------------------------------------------------------
+     Typography - Instrument Serif for titles, Manrope for everything else.
+     The italic <em> inside a title is the keyword, colored --slate.
+     ---------------------------------------------------------------------- */
+  .eyebrow {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--slate);
   }
 
-  /* Primary CTA - teal appears only as light / action, never a big flat field */
+  .title-hero {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(38px, 5.4vw, 62px);
+    line-height: 1.06;
+    letter-spacing: -0.01em;
+  }
+
+  .title-xl {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(30px, 3.6vw, 42px);
+    line-height: 1.08;
+  }
+
+  .title-lg {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(26px, 2.8vw, 34px);
+    line-height: 1.12;
+  }
+
+  .title-md {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(22px, 2vw, 26px);
+    line-height: 1.2;
+  }
+
+  .quote {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 28px);
+    line-height: 1.4;
+  }
+
+  .title-hero em,
+  .title-xl em,
+  .title-lg em,
+  .title-md em,
+  .quote em {
+    font-style: italic;
+    color: var(--slate);
+  }
+
+  /* ------------------------------------------------------------------------
+     Surface: atmospheric gradient + grain. The visual identity of the site.
+     Hero and contact band use .surface.grain; flat sections use .grain on
+     --paper. Content sits above the grain (.grain > * gets z-index 3).
+     ---------------------------------------------------------------------- */
+  .surface {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(168deg, #f6f5f2 0%, #e4e8eb 52%, #cbd5da 100%);
+  }
+
+  .grain {
+    position: relative;
+  }
+
+  /* grain: inline SVG, weighs a few bytes, makes the site "printed" and not
+     "generated" */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    opacity: 0.2;
+    mix-blend-mode: multiply;
+  }
+
+  .grain > * {
+    position: relative;
+    z-index: 3;
+  }
+
+  /* ------------------------------------------------------------------------
+     Primary action: dark pill with a circle that rotates on hover.
+     The ONE call to action of the site.
+     ---------------------------------------------------------------------- */
   .btn-primary {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.95rem 1.6rem;
+    gap: 15px;
     border-radius: 999px;
-    background: linear-gradient(180deg, var(--teal-text), var(--deep));
-    color: var(--paper-pure);
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
-    font-weight: 500;
-    font-size: 0.78rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    box-shadow:
-      0 1px 0 0 rgba(255, 255, 255, 0.35) inset,
-      0 10px 30px -10px rgba(0, 158, 201, 0.5);
-    transition:
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    padding: 7px 7px 7px 26px;
+    background: linear-gradient(145deg, #2e373e 0%, #171b1f 52%, #0b0e10 100%);
+    color: #f4f7f8;
+    text-decoration: none;
     overflow: hidden;
+    isolation: isolate;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 14.5px;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  .btn-primary > * {
+    position: relative;
+    z-index: 3;
+  }
+
+  /* the same grain of the site, inside the button too */
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 999px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    opacity: 0.16;
+    mix-blend-mode: overlay;
+  }
+
+  .btn-primary .circ {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ffffff 0%, #fafbfc 48%, #e4eaed 100%);
+    color: #16191c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    transition:
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.35s ease;
+  }
+
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow:
-      0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
-      0 18px 44px -12px rgba(0, 158, 201, 0.55);
+  }
+  .btn-primary:hover .circ {
+    transform: rotate(-45deg);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.14);
   }
 
-  .btn-ghost {
+  /* ------------------------------------------------------------------------
+     Secondary link: underline that draws itself.
+     ---------------------------------------------------------------------- */
+  .link-secondary {
+    position: relative;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #16191c;
+    text-decoration: none;
+    padding-bottom: 6px;
+  }
+  .link-secondary::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background: #4e6a78;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .link-secondary:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* ------------------------------------------------------------------------
+     Small pills (cookie banner). Equal visual weight for every choice.
+     ---------------------------------------------------------------------- */
+  .btn-small {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.95rem 1.5rem;
+    justify-content: center;
     border-radius: 999px;
-    border: 1px solid var(--glass-border);
-    background: rgba(255, 255, 255, 0.4);
-    -webkit-backdrop-filter: blur(12px) saturate(130%);
-    backdrop-filter: blur(12px) saturate(130%);
+    padding: 9px 18px;
+    border: 1px solid var(--line);
+    background: transparent;
     color: var(--ink);
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
-    font-weight: 500;
-    font-size: 0.78rem;
-    letter-spacing: 0.16em;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-small:hover {
+    border-color: var(--slate);
+    transform: translateY(-1px);
+  }
+
+  /* ------------------------------------------------------------------------
+     Form: sharp corners, hairline borders, slate focus.
+     ---------------------------------------------------------------------- */
+  .label {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    transition:
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 0.5s ease,
-      background 0.5s ease;
-  }
-  .btn-ghost:hover {
-    transform: translateY(-2px);
-    border-color: var(--teal);
-    background: rgba(255, 255, 255, 0.62);
+    color: var(--muted);
   }
 
-  /* Reveal primitive. Hidden state applies ONLY when JS is available
-     (html.js), so with JS disabled all content renders visible. */
-  html.js .reveal {
+  .field {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: #ffffff;
+    padding: 12px 14px;
+    color: var(--ink);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+  }
+  .field::placeholder {
+    color: rgba(85, 96, 105, 0.6);
+  }
+  .field:focus {
+    border-color: var(--slate);
+  }
+
+  /* Submit confirm: the label fades out and a check fades in (~1.5s),
+     only after a successful send. */
+  .btn-submit .btn-label,
+  .btn-submit .circ {
+    transition: opacity 0.25s ease;
+  }
+  .btn-submit.is-done .btn-label,
+  .btn-submit.is-done .circ {
     opacity: 0;
-    transform: translateY(22px);
-    transition:
-      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: opacity, transform;
   }
-  html.js .reveal.is-in {
+  .btn-submit .btn-check {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    color: #f4f7f8;
+    font-size: 18px;
+    z-index: 4;
+  }
+  .btn-submit.is-done .btn-check {
     opacity: 1;
-    transform: none;
-  }
-
-  .link-underline {
-    background-image: linear-gradient(var(--teal), var(--teal));
-    background-size: 0% 1px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    padding-bottom: 1px;
-  }
-  .link-underline:hover {
-    background-size: 100% 1px;
   }
 
   /* ------------------------------------------------------------------------
@@ -536,11 +397,10 @@
     max-width: 74ch;
   }
   .legal-prose h2 {
-    font-family: var(--font-archivo), system-ui, sans-serif;
-    font-weight: 800;
-    font-variation-settings: "wght" 800, "wdth" 125;
-    font-size: clamp(1.3rem, 2vw, 1.7rem);
-    line-height: 1.1;
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(24px, 2.4vw, 30px);
+    line-height: 1.15;
     color: var(--ink);
     margin-top: 3rem;
     margin-bottom: 0.85rem;
@@ -553,7 +413,7 @@
     margin-bottom: 0.4rem;
   }
   .legal-prose p {
-    color: var(--ink-soft);
+    color: var(--muted);
     line-height: 1.75;
     margin-bottom: 1rem;
   }
@@ -567,22 +427,21 @@
   .legal-prose li {
     position: relative;
     padding-left: 1.3rem;
-    color: var(--ink-soft);
+    color: var(--muted);
     line-height: 1.7;
   }
   .legal-prose li::before {
     content: "";
     position: absolute;
     left: 0.1rem;
-    top: 0.66em;
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: var(--teal);
-    opacity: 0.65;
+    top: 0.72em;
+    width: 5px;
+    height: 5px;
+    background: var(--slate);
+    opacity: 0.7;
   }
   .legal-prose a {
-    color: var(--teal-text);
+    color: var(--slate);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -591,18 +450,16 @@
     font-weight: 600;
   }
   .legal-prose .placeholder {
-    color: var(--teal-text);
-    background: rgba(39, 121, 167, 0.08);
+    color: var(--slate);
+    background: rgba(78, 106, 120, 0.1);
     padding: 0.05em 0.4em;
-    border-radius: 6px;
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
-    font-weight: 500;
-    font-size: 0.85em;
+    font-size: 0.9em;
   }
 }
 
 /* --------------------------------------------------------------------------
-   Reduced motion: honour the user's setting everywhere.
+   Reduced motion: honour the user's setting everywhere. With this active
+   there is no animation and no transition, full stop.
    ------------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -613,82 +470,4 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Button click animations (added on top of the base .btn-* styles).
-   B4 sheen on primary CTAs, B6 confirm on the form submit button.
-   Reduced motion neutralises them via the media query above (!important).
-   ------------------------------------------------------------------------ */
-.btn-sheen {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.btn-sheen > * {
-  position: relative;
-  z-index: 2;
-}
-.btn-sheen::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent,
-    rgba(255, 255, 255, 0.55),
-    transparent
-  );
-  transform: skewX(-20deg);
-  z-index: 1;
-  pointer-events: none;
-}
-.btn-sheen.is-sheen::after {
-  animation: btnSheen 0.7s ease;
-}
-@keyframes btnSheen {
-  from {
-    left: -120%;
-  }
-  to {
-    left: 140%;
-  }
-}
-
-.btn-submit {
-  position: relative;
-  overflow: hidden;
-  transition: background 0.3s ease;
-}
-.btn-submit .btn-label,
-.btn-submit .btn-arrow {
-  transition: opacity 0.25s ease;
-}
-.btn-submit.is-done {
-  background: #49c5b6;
-}
-.btn-submit.is-done .btn-label,
-.btn-submit.is-done .btn-arrow {
-  opacity: 0;
-}
-.btn-submit .btn-check {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  color: #fff;
-  font-size: 18px;
-}
-.btn-submit.is-done .btn-check {
-  opacity: 1;
 }

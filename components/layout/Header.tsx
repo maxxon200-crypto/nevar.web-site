@@ -3,20 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import Logo from "@/components/ui/Logo";
-import SheenLink from "@/components/ui/SheenLink";
 import { nav } from "@/data/site";
-import { ArrowRight } from "@/components/ui/icons";
 
+/**
+ * Light navigation: serif wordmark + three links. No button in the menu, the
+ * call to action lives in the hero. Section links are home anchors; off the
+ * home page (Privacy, Cookie) they are prefixed with "/" so they return home.
+ */
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
-  // Section links are home anchors. Off the home page (Privacy, Cookie) they
-  // must first return home, so the anchor is prefixed with "/".
   const pathname = usePathname();
   const isHome = pathname === "/";
   const anchor = (href: string) => (isHome ? href : `/${href}`);
@@ -36,8 +36,7 @@ export default function Header() {
     };
   }, [open]);
 
-  // Close the menu (and release the scroll lock) when crossing to desktop, where
-  // the toggle and overlay are hidden and could otherwise strand the lock.
+  // Close the menu (and release the scroll lock) when crossing to desktop.
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
     const onChange = () => {
@@ -48,8 +47,7 @@ export default function Header() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // While open: Escape closes, focus moves into the menu, and returns to the
-  // toggle on close.
+  // While open: Escape closes, focus moves into the menu, returns on close.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -66,9 +64,9 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div
-        className={`transition-colors duration-500 ${
+        className={`transition-colors duration-300 ${
           scrolled
-            ? "border-b border-frost/40 bg-white/55 backdrop-blur-[20px] backdrop-saturate-150"
+            ? "border-b border-line bg-[rgba(246,245,242,0.95)]"
             : "border-b border-transparent"
         }`}
       >
@@ -81,24 +79,20 @@ export default function Header() {
             <Logo />
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Principale">
+          <nav
+            className="hidden items-center gap-9 md:flex"
+            aria-label="Principale"
+          >
             {nav.map((item) => (
               <a
                 key={item.href}
                 href={anchor(item.href)}
-                className="link-underline font-body text-xs font-medium uppercase tracking-[0.16em] text-ink-soft transition-colors hover:text-ink"
+                className="link-secondary"
               >
                 {item.label}
               </a>
             ))}
           </nav>
-
-          <div className="hidden md:block">
-            <SheenLink href={anchor("#contatto")} className="btn-primary !px-5 !py-2.5">
-              <span>Preventivo</span>
-              <ArrowRight size={14} />
-            </SheenLink>
-          </div>
 
           {/* Mobile toggle */}
           <button
@@ -129,53 +123,35 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            id="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu di navigazione"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-white/80 backdrop-blur-[24px] backdrop-saturate-150 md:hidden"
-          >
-            <nav
-              className="shell flex h-full flex-col justify-center gap-2"
-              aria-label="Mobile"
+      {/* Mobile menu: plain CSS transition, solid paper, no blur */}
+      <div
+        id="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu di navigazione"
+        aria-hidden={!open}
+        className={`fixed inset-0 z-40 bg-paper transition-[opacity,visibility] duration-300 md:hidden ${
+          open ? "visible opacity-100" : "invisible opacity-0"
+        }`}
+      >
+        <nav
+          className="shell flex h-full flex-col justify-center"
+          aria-label="Mobile"
+        >
+          {nav.map((item, i) => (
+            <a
+              key={item.href}
+              ref={i === 0 ? firstLinkRef : undefined}
+              href={anchor(item.href)}
+              onClick={() => setOpen(false)}
+              className="border-b border-line py-6 font-serif text-3xl text-ink"
+              tabIndex={open ? 0 : -1}
             >
-              {nav.map((item, i) => (
-                <motion.a
-                  key={item.href}
-                  ref={i === 0 ? firstLinkRef : undefined}
-                  href={anchor(item.href)}
-                  onClick={() => setOpen(false)}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * i + 0.05, duration: 0.4 }}
-                  className="display-lg border-b border-frost/40 py-4 text-ink"
-                >
-                  {item.label}
-                </motion.a>
-              ))}
-              <motion.a
-                href={anchor("#contatto")}
-                onClick={() => setOpen(false)}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.4 }}
-                className="btn-primary mt-8 justify-center"
-              >
-                Richiedi un preventivo
-                <ArrowRight size={14} />
-              </motion.a>
-            </nav>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </div>
     </header>
   );
 }

@@ -5,8 +5,8 @@ export const dynamic = "force-dynamic";
 
 type Payload = {
   nome?: string;
+  studio?: string;
   email?: string;
-  tipo?: string;
   budget?: string;
   messaggio?: string;
   website?: string; // honeypot
@@ -27,8 +27,8 @@ export async function POST(req: Request) {
   }
 
   const nome = (data.nome ?? "").trim();
+  const studio = (data.studio ?? "").trim();
   const email = (data.email ?? "").trim();
-  const tipo = (data.tipo ?? "").trim();
   const budget = (data.budget ?? "").trim();
   const messaggio = (data.messaggio ?? "").trim();
 
@@ -46,6 +46,7 @@ export async function POST(req: Request) {
     !EMAIL_RE.test(email) ||
     messaggio.length < 10 ||
     nome.length > 120 ||
+    studio.length > 160 ||
     email.length > 160 ||
     messaggio.length > 5000
   ) {
@@ -70,8 +71,8 @@ export async function POST(req: Request) {
     "Nuova richiesta dal sito nevar.web",
     "",
     `Nome: ${nome}`,
+    `Studio: ${studio || "non indicato"}`,
     `Email: ${email}`,
-    `Tipo progetto: ${tipo || "non indicato"}`,
     `Budget indicativo: ${budget || "non indicato"}`,
     "",
     "Messaggio:",
@@ -89,7 +90,9 @@ export async function POST(req: Request) {
         from,
         to: [DEST],
         reply_to: email,
-        subject: `Richiesta preventivo (${tipo || "progetto"}): ${nome}`,
+        subject: `Richiesta preventivo nevar.web: ${nome}${
+          studio ? ` (${studio})` : ""
+        }`,
         text,
       }),
     });

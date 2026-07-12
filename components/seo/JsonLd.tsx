@@ -1,6 +1,9 @@
 import { site, owner } from "@/data/site";
 
-/** LocalBusiness / ProfessionalService structured data. */
+/**
+ * ProfessionalService structured data, aligned to the positioning: websites
+ * for architecture and interior design studios. No prices anywhere.
+ */
 export default function JsonLd() {
   const data = {
     "@context": "https://schema.org",
@@ -11,11 +14,9 @@ export default function JsonLd() {
     description: site.shortDescription,
     url: site.url,
     email: site.email,
-    image: `${site.url}/opengraph-image`,
     logo: `${site.url}/logo.svg`,
     knowsLanguage: ["it"],
-    priceRange: "€€",
-    slogan: "Bianco, veloce, fatto a mano.",
+    serviceType: "Siti web per studi di architettura e interior design",
     areaServed: site.areaServed.map((name) => ({
       "@type": "AdministrativeArea",
       name,
@@ -30,32 +31,6 @@ export default function JsonLd() {
       "@type": "Person",
       name: owner.name,
     },
-    makesOffer: [
-      {
-        "@type": "Offer",
-        name: "Sviluppo Web",
-        priceCurrency: "EUR",
-        price: "690",
-        description:
-          "Siti web su misura, dalla vetrina one-page al progetto con WebGL e animazioni.",
-      },
-      {
-        "@type": "Offer",
-        name: "Sviluppo App",
-        priceCurrency: "EUR",
-        price: "6900",
-        description:
-          "App iOS e Android cross-platform con Expo e React Native, backend e dashboard.",
-      },
-      {
-        "@type": "Offer",
-        name: "Nevar Care",
-        priceCurrency: "EUR",
-        price: "49",
-        description:
-          "Manutenzione, aggiornamenti, hosting gestito, backup e monitoraggio.",
-      },
-    ],
   };
 
   return (

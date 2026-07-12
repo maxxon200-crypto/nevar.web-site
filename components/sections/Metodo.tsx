@@ -1,44 +1,41 @@
-import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
-import {
-  IconAscolto,
-  IconDesign,
-  IconSviluppo,
-  IconLancio,
-} from "@/components/icons/MethodIcons";
-import { method } from "@/data/method";
+import { scope, scopeNote } from "@/data/content";
 
-const METHOD_ICONS = [IconAscolto, IconDesign, IconSviluppo, IconLancio];
-
+/**
+ * Scope of work: three tiers with TIMES only, never prices. Every project
+ * gets a dedicated quote (the note below says so, explicitly).
+ */
 export default function Metodo() {
   return (
-    <section id="metodo" className="section">
+    <section id="metodo" className="section grain border-t border-line bg-paper">
       <div className="shell">
-        <SectionHeading
-          eyebrow="Metodo"
-          title="Come nasce un progetto"
-          lead="Quattro fasi, un ritmo chiaro. Sai sempre a che punto siamo e cosa succede dopo."
-        />
+        <Reveal>
+          <p className="eyebrow">Portata del lavoro</p>
+        </Reveal>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {method.map((s, i) => {
-            const Icon = METHOD_ICONS[i] ?? IconAscolto;
-            return (
-              <Reveal key={s.n} delay={i * 0.07} className="h-full">
-                <div className="metodo-card flex h-full flex-col gap-5">
-                  <div className="flex items-center justify-between">
-                    <div className="metodo-icon">
-                      <Icon />
-                    </div>
-                    <span className="label-mono">{s.tag}</span>
-                  </div>
-                  <h3 className="display-md text-ink">{s.title}</h3>
-                  <p className="text-sm leading-relaxed text-ink-soft">{s.body}</p>
-                </div>
-              </Reveal>
-            );
-          })}
+        <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-line">
+          {scope.map((s, i) => (
+            <Reveal
+              key={s.name}
+              delay={i * 0.08}
+              className="md:px-10 md:first:pl-0 md:last:pr-0"
+            >
+              <h2 className="title-md">{s.name}</h2>
+              <p className="mt-2 font-sans text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">
+                {s.time}
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                {s.body}
+              </p>
+            </Reveal>
+          ))}
         </div>
+
+        <Reveal delay={0.1}>
+          <p className="mt-12 max-w-2xl text-sm leading-relaxed text-muted">
+            {scopeNote}
+          </p>
+        </Reveal>
       </div>
     </section>
   );

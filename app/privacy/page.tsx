@@ -39,8 +39,8 @@ export default function PrivacyPage() {
       <h3>Dati che fornisci tu</h3>
       <p>
         Quando compili il form di contatto, o quando mi scrivi via email,
-        raccolgo i dati che mi comunichi: nome, indirizzo email, tipo di
-        progetto, budget indicativo e il contenuto del messaggio.
+        raccolgo i dati che mi comunichi: nome, studio di appartenenza,
+        indirizzo email, budget indicativo e il contenuto del messaggio.
       </p>
       <h3>Dati raccolti automaticamente</h3>
       <p>

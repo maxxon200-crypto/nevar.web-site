@@ -1,21 +1,17 @@
 /**
- * Text wordmark: nevar in ink, .web in teal, rendered in the wide display face.
- * This is the live logo. A graphic version can be dropped at /public/logo.svg
- * and swapped in with a single line (see DESIGN.md) without touching layout.
+ * Text wordmark in the serif face, plain ink. No colored accent: the only
+ * accent on the site is the slate italic inside titles.
  */
 export default function Logo({
   className = "",
-  size = "text-[1.35rem]",
+  size = "text-[1.45rem]",
 }: {
   className?: string;
   size?: string;
 }) {
   return (
-    <span
-      className={`font-display inline-flex items-baseline leading-none ${size} ${className}`}
-      style={{ fontVariationSettings: '"wght" 800, "wdth" 125' }}
-    >
-      nevar<span className="text-teal-text">.web</span>
+    <span className={`font-serif leading-none text-ink ${size} ${className}`}>
+      nevar.web
     </span>
   );
 }

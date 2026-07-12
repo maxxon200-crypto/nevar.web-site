@@ -1,17 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  getConsent,
-  setConsent,
-  OPEN_EVENT,
-} from "@/lib/consent";
+import { getConsent, setConsent, OPEN_EVENT } from "@/lib/consent";
 
 /**
- * Garante-compliant banner. Accetta / Rifiuta / Preferenze carry equal weight,
- * nothing is pre-selected, and no non-technical cookie is ever set (the site
- * uses only technical cookies today). Choice is persisted in localStorage.
+ * Garante-compliant banner. Accetta / Rifiuta / Preferenze carry equal weight
+ * (same pill style), nothing is pre-selected, and no non-technical cookie is
+ * ever set (the site uses only technical cookies today). Choice is persisted
+ * in localStorage. Restyled to the editorial system: paper, hairline, sharp
+ * corners, no blur, no motion library.
  */
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
@@ -45,128 +42,120 @@ export default function CookieBanner() {
     setShowPrefs(false);
   }
 
+  if (!visible) return null;
+
   return (
-    <AnimatePresence>
-      {visible ? (
-        <motion.div
-          role="dialog"
-          aria-modal="false"
-          aria-label="Preferenze cookie"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 24 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-x-3 bottom-3 z-[60] mx-auto max-w-2xl sm:inset-x-6"
-        >
-          <div className="glass rounded-card-lg p-6 sm:p-7">
-            <p className="label-mono mb-3">Cookie</p>
+    <div
+      role="dialog"
+      aria-modal="false"
+      aria-label="Preferenze cookie"
+      className="fixed inset-x-3 bottom-3 z-[60] mx-auto max-w-2xl sm:inset-x-6"
+    >
+      <div className="border border-line bg-paper p-6 sm:p-7">
+        <p className="eyebrow mb-3">Cookie</p>
 
-            {!showPrefs ? (
-              <>
-                <p className="text-sm leading-relaxed text-ink-soft">
-                  Questo sito usa solo cookie tecnici necessari al suo
-                  funzionamento, che non richiedono consenso. Non usiamo cookie
-                  di profilazione. Dettagli nella{" "}
-                  <a
-                    href="/cookie-policy"
-                    className="link-underline text-teal-text"
-                  >
-                    Cookie Policy
-                  </a>
-                  .
-                </p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={() => decide(true)}
-                    className="btn-ghost !py-2.5"
-                  >
-                    Accetta
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => decide(false)}
-                    className="btn-ghost !py-2.5"
-                  >
-                    Rifiuta
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowPrefs(true)}
-                    className="btn-ghost !py-2.5"
-                  >
-                    Preferenze
-                  </button>
+        {!showPrefs ? (
+          <>
+            <p className="text-sm leading-relaxed text-muted">
+              Questo sito usa solo cookie tecnici necessari al suo
+              funzionamento, che non richiedono consenso. Non usiamo cookie di
+              profilazione. Dettagli nella{" "}
+              <a
+                href="/cookie-policy"
+                className="underline underline-offset-2 text-ink"
+              >
+                Cookie Policy
+              </a>
+              .
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => decide(true)}
+                className="btn-small"
+              >
+                Accetta
+              </button>
+              <button
+                type="button"
+                onClick={() => decide(false)}
+                className="btn-small"
+              >
+                Rifiuta
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowPrefs(true)}
+                className="btn-small"
+              >
+                Preferenze
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-sm leading-relaxed text-muted">
+              Gestisci le categorie. I cookie tecnici sono sempre attivi perché
+              indispensabili.
+            </p>
+
+            <ul className="mt-5 flex flex-col gap-3">
+              <li className="flex items-center justify-between gap-4 border border-line px-4 py-3">
+                <div>
+                  <p className="text-sm font-medium text-ink">Cookie tecnici</p>
+                  <p className="text-xs text-muted">
+                    Necessari, sempre attivi.
+                  </p>
                 </div>
-              </>
-            ) : (
-              <>
-                <p className="text-sm leading-relaxed text-ink-soft">
-                  Gestisci le categorie. I cookie tecnici sono sempre attivi
-                  perché indispensabili.
-                </p>
+                <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+                  Attivi
+                </span>
+              </li>
 
-                <ul className="mt-5 flex flex-col gap-3">
-                  <li className="flex items-center justify-between gap-4 rounded-2xl border border-frost/50 bg-white/40 px-4 py-3">
-                    <div>
-                      <p className="text-sm font-medium text-ink">
-                        Cookie tecnici
-                      </p>
-                      <p className="text-xs text-ink-mute">
-                        Necessari, sempre attivi.
-                      </p>
-                    </div>
-                    <span className="font-mono text-xs uppercase tracking-[0.16em] text-ink-mute">
-                      Attivi
-                    </span>
-                  </li>
-
-                  <li className="flex items-center justify-between gap-4 rounded-2xl border border-frost/50 bg-white/40 px-4 py-3">
-                    <div>
-                      <p className="text-sm font-medium text-ink">
-                        Statistiche (analytics)
-                      </p>
-                      <p className="text-xs text-ink-mute">
-                        Non attualmente in uso. Pronte per il futuro.
-                      </p>
-                    </div>
-                    <Toggle
-                      checked={analytics}
-                      onChange={setAnalytics}
-                      label="Consenti statistiche"
-                    />
-                  </li>
-                </ul>
-
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={() => decide(analytics)}
-                    className="btn-primary !py-2.5"
-                  >
-                    Salva preferenze
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => decide(true)}
-                    className="btn-ghost !py-2.5"
-                  >
-                    Accetta tutto
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => decide(false)}
-                    className="btn-ghost !py-2.5"
-                  >
-                    Rifiuta tutto
-                  </button>
+              <li className="flex items-center justify-between gap-4 border border-line px-4 py-3">
+                <div>
+                  <p className="text-sm font-medium text-ink">
+                    Statistiche (analytics)
+                  </p>
+                  <p className="text-xs text-muted">
+                    Non attualmente in uso. Pronte per il futuro.
+                  </p>
                 </div>
-              </>
-            )}
-          </div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
+                <Toggle
+                  checked={analytics}
+                  onChange={setAnalytics}
+                  label="Consenti statistiche"
+                />
+              </li>
+            </ul>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => decide(analytics)}
+                className="btn-small"
+              >
+                Salva preferenze
+              </button>
+              <button
+                type="button"
+                onClick={() => decide(true)}
+                className="btn-small"
+              >
+                Accetta tutto
+              </button>
+              <button
+                type="button"
+                onClick={() => decide(false)}
+                className="btn-small"
+              >
+                Rifiuta tutto
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -186,13 +175,13 @@ function Toggle({
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
-        checked ? "border-teal-text bg-teal-text" : "border-frost bg-white/70"
+      className={`relative h-6 w-11 shrink-0 rounded-pill border transition-colors ${
+        checked ? "border-slate bg-slate" : "border-line bg-white"
       }`}
     >
       <span
-        className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow-sm transition-all ${
-          checked ? "left-[calc(100%-1.15rem)]" : "left-1"
+        className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-pill transition-all ${
+          checked ? "left-[calc(100%-1.15rem)] bg-white" : "left-1 bg-deep"
         }`}
       />
     </button>

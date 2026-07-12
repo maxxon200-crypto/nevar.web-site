@@ -5,12 +5,9 @@ import { site } from "@/data/site";
 
 /**
  * Email link that always works. Primary behaviour is a real mailto: with a
- * prefilled subject; on click we also copy the address to the clipboard and show
- * an "Email copiata" confirmation, so it stays useful even when the device has
- * no default mail client configured.
- *
- * Prefer opening Gmail's web compose window instead of the OS mail client?
- * Replace `href` below with `site.emailComposeHref`.
+ * prefilled subject; on click we also copy the address to the clipboard and
+ * show an "Email copiata" confirmation, so it stays useful even when the
+ * device has no default mail client configured.
  */
 const PREFILLED_HREF = `${site.emailHref}?subject=${encodeURIComponent(
   site.emailSubject
@@ -45,7 +42,7 @@ export default function EmailLink({
       <span
         role="status"
         aria-live="polite"
-        className={`pointer-events-none absolute top-full mt-1.5 whitespace-nowrap font-mono text-xs uppercase tracking-[0.16em] text-teal-text transition-opacity duration-300 ${
+        className={`pointer-events-none absolute top-full mt-2 whitespace-nowrap font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-slate transition-opacity duration-300 ${
           copied ? "opacity-100" : "opacity-0"
         }`}
       >

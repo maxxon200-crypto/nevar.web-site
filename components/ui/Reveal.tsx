@@ -1,71 +1,56 @@
 "use client";
 
-import { ElementType, useEffect, useRef } from "react";
-
-type RevealProps = {
-  children: React.ReactNode;
-  className?: string;
-  /** Stagger offset in seconds, applied as a CSS transition-delay. */
-  delay?: number;
-  as?: ElementType;
-  id?: string;
-};
+import { ElementType, ReactNode, useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
- * Scroll reveal. The hidden -> visible transition lives in CSS (.reveal /
- * .is-in). We toggle the class with an IntersectionObserver, which fires on
- * layout regardless of the scroll library, so content can never get stuck
- * hidden. Reduced motion is handled by CSS; the hidden state only applies with
- * JS present (html.js), so without JS everything renders visible.
+ * The only animation on the site: a soft fade with a slight rise when the
+ * element scrolls into view.
+ *
+ * CRITICAL RULE (see DESIGN.md): the base style keeps content fully visible.
+ * GSAP only ADDS the effect at runtime via gsap.from, so with JavaScript
+ * disabled nothing is ever hidden. Honours prefers-reduced-motion by not
+ * animating at all.
  */
 export default function Reveal({
-  children,
+  as,
   className = "",
   delay = 0,
-  as,
-  id,
-}: RevealProps) {
+  children,
+}: {
+  as?: ElementType;
+  className?: string;
+  delay?: number;
+  children: ReactNode;
+}) {
   const ref = useRef<HTMLElement | null>(null);
-  const Tag = (as || "div") as ElementType;
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    if (!("IntersectionObserver" in window)) {
-      el.classList.add("is-in");
-      return;
-    }
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            el.classList.add("is-in");
-            io.unobserve(el);
-          }
-        }
-      },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.01 }
-    );
-    io.observe(el);
-
-    // Failsafe: never leave content hidden if something goes wrong.
-    const safety = window.setTimeout(() => el.classList.add("is-in"), 2600);
+    gsap.registerPlugin(ScrollTrigger);
+    const tween = gsap.from(el, {
+      autoAlpha: 0,
+      y: 24,
+      duration: 0.9,
+      delay,
+      ease: "power3.out",
+      clearProps: "all",
+      scrollTrigger: { trigger: el, start: "top 88%", once: true },
+    });
 
     return () => {
-      io.disconnect();
-      window.clearTimeout(safety);
+      tween.scrollTrigger?.kill();
+      tween.kill();
     };
-  }, []);
+  }, [delay]);
 
+  const Tag = (as || "div") as ElementType;
   return (
-    <Tag
-      ref={ref as never}
-      id={id}
-      className={`reveal ${className}`}
-      style={delay ? { transitionDelay: `${delay}s` } : undefined}
-    >
+    <Tag ref={ref} className={className}>
       {children}
     </Tag>
   );

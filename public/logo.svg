@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Slot logo. Placeholder wordmark for nevar.web (ink + teal .web).
-  Replace this file with your Canva SVG to swap the graphic logo everywhere it
-  is referenced (OG/embeds); the in-site header uses the live text wordmark
-  in the display font. Keep the viewBox aspect ratio close to this one.
+  Slot logo. Wordmark for nevar.web in the editorial system (ink on warm
+  paper, serif). Replace with the final graphic version if one is made; the
+  in-site header uses the live text wordmark (components/ui/Logo.tsx).
 -->
-<svg width="260" height="64" viewBox="0 0 260 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="nevar.web">
-  <text x="0" y="46"
-    font-family="'Space Mono', ui-monospace, monospace"
-    font-size="42" font-weight="700" letter-spacing="-1">
-    <tspan fill="#0B1416">nevar</tspan><tspan fill="#009EC9">.web</tspan>
-  </text>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="120" viewBox="0 0 480 120" role="img" aria-label="nevar.web">
+  <rect width="480" height="120" fill="#F6F5F2"/>
+  <text x="28" y="78" font-family="Georgia, 'Times New Roman', serif" font-size="54" fill="#16191C">nevar.web</text>
 </svg>

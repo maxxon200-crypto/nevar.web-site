@@ -1,27 +1,29 @@
-import { Archivo } from "next/font/google";
-import { GeistSans } from "geist/font/sans";
+import { Instrument_Serif, Manrope } from "next/font/google";
 
 /**
- * Type system (see DESIGN.md). Two families, no monospace.
+ * Type system (see DESIGN.md). Two families, nothing else.
  *
- *   Archivo (variable, wdth axis) -> display and prices:
- *     - display : weight 800, font-variation-settings "wdth" 125 (Expanded)
- *     - prices  : same Expanded look as the tier names
- *   Geist (variable)              -> everything else: body, UI, navigation,
- *                                    labels (500) and panel microcopy.
+ *   Instrument Serif (400, normal + italic) -> wordmark, headings, quotes.
+ *     The italic is reserved for the keyword of a title, colored --slate.
+ *   Manrope (400/500/600/700)               -> everything else: body, menu,
+ *     labels, form, buttons.
  *
- * Archivo is fetched at build time by next/font/google; Geist ships as a ready,
- * self-hosted next/font object from Vercel's official `geist` package (its own
- * CSS variable is --font-geist-sans). No runtime CDN in either case. The `wdth`
- * axis is what gives us the Expanded look without a second font file; the width
- * is forced per element in globals.css.
+ * Both are fetched at build time by next/font/google and self-hosted.
+ * No runtime CDN.
  */
-export const archivo = Archivo({
+export const serif = Instrument_Serif({
   subsets: ["latin"],
-  axes: ["wdth"],
+  weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
-  variable: "--font-archivo",
-  fallback: ["system-ui", "sans-serif"],
+  variable: "--font-serif",
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
-export const geist = GeistSans;
+export const sans = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-sans",
+  fallback: ["system-ui", "sans-serif"],
+});

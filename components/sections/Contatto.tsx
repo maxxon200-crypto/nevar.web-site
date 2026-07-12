@@ -1,39 +1,36 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import GlassCard from "@/components/ui/GlassCard";
 import Reveal from "@/components/ui/Reveal";
 import EmailLink from "@/components/ui/EmailLink";
-import { ArrowRight, Check, Mail } from "@/components/ui/icons";
 import { site } from "@/data/site";
-
-const TIPI = ["Web", "App", "Non so"] as const;
-const BUDGETS = [
-  "Fino a 1.000 €",
-  "Da 1.000 a 3.000 €",
-  "Da 3.000 a 8.000 €",
-  "Oltre 8.000 €",
-  "Da definire",
-] as const;
+import { budgets } from "@/data/content";
 
 type Status = "idle" | "submitting" | "success" | "fallback";
 
 type Fields = {
   nome: string;
+  studio: string;
   email: string;
-  tipo: string;
   budget: string;
   messaggio: string;
 };
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
+/**
+ * Contact band: surface + grain. Left the pitch and the always-working email,
+ * right the form. The budget select qualifies the request without publishing
+ * prices on the site. Send logic: POST to /api/contact, mailto fallback when
+ * email is not configured; the check on the button appears ONLY after a
+ * successful send (~1.5s), then the success panel takes over.
+ */
 export default function Contatto() {
   const [fields, setFields] = useState<Fields>({
     nome: "",
+    studio: "",
     email: "",
-    tipo: "Web",
-    budget: BUDGETS[4],
+    budget: budgets[0],
     messaggio: "",
   });
   const [website, setWebsite] = useState(""); // honeypot
@@ -44,13 +41,11 @@ export default function Contatto() {
   const [done, setDone] = useState(false);
 
   const mailtoHref = useMemo(() => {
-    const subject = `Richiesta preventivo (${fields.tipo}): ${
-      fields.nome || "nuovo progetto"
-    }`;
+    const subject = site.emailSubject;
     const body = [
       `Nome: ${fields.nome}`,
+      `Studio: ${fields.studio}`,
       `Email: ${fields.email}`,
-      `Tipo progetto: ${fields.tipo}`,
       `Budget indicativo: ${fields.budget}`,
       "",
       "Messaggio:",
@@ -91,8 +86,7 @@ export default function Contatto() {
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean };
       if (res.ok && data.ok) {
-        // Visual confirm (B6): show the check on the button, then reveal the
-        // success panel. Send logic is unchanged.
+        // Visual confirm: check on the button, then the success panel.
         setDone(true);
         window.setTimeout(() => {
           setDone(false);
@@ -110,56 +104,44 @@ export default function Contatto() {
   }
 
   return (
-    <section id="contatto" className="section">
-      <div className="shell">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left: direct contact */}
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-5">
-              <div className="flex items-center gap-3">
-                <span className="h-px w-8 bg-teal/70" aria-hidden />
-                <span className="label-mono">Contatto</span>
-              </div>
-              <Reveal as="h2" className="display-xl text-ink">
-                Parliamo del
-                <br />
-                <span className="text-teal-text">tuo progetto</span>
-              </Reveal>
-              <Reveal
-                as="p"
-                delay={0.05}
-                className="max-w-md text-lg leading-relaxed text-ink-soft"
-              >
-                Un'idea, un preventivo, o solo una domanda: scrivimi. Rispondo di
-                persona, di solito entro un giorno lavorativo.
-              </Reveal>
-            </div>
-
-            <Reveal delay={0.1}>
-              <EmailLink className="group inline-flex items-center gap-3 font-mono text-base text-ink transition-colors hover:text-teal-text">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full border border-frost/60 bg-white/50 text-teal-text transition-colors group-hover:border-teal">
-                  <Mail size={16} />
-                </span>
-                <span className="link-underline">{site.email}</span>
-              </EmailLink>
+    <section id="contatto" className="surface grain">
+      <div className="shell section">
+        <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
+          {/* Left: pitch + direct email */}
+          <div className="flex flex-col gap-7">
+            <Reveal>
+              <p className="eyebrow">Contatto</p>
             </Reveal>
-
-            <Reveal delay={0.15}>
-              <p className="font-mono text-xs uppercase leading-relaxed tracking-[0.16em] text-ink-mute">
-                STUDIO / {site.city.toUpperCase()}
-                <br />
-                {site.country.toUpperCase()}
-              </p>
+            <Reveal as="h2" className="title-xl">
+              Parliamone. <em>Venti minuti.</em>
+            </Reveal>
+            <Reveal
+              as="p"
+              delay={0.05}
+              className="max-w-md text-[15px] leading-relaxed text-muted"
+            >
+              Senza impegno. Rispondo di persona, di solito entro un giorno
+              lavorativo. Se non sono la persona giusta, te lo dico e ti
+              indirizzo altrove.
+            </Reveal>
+            <Reveal delay={0.1}>
+              <EmailLink className="link-secondary text-[15px]">
+                {site.email}
+              </EmailLink>
             </Reveal>
           </div>
 
-          {/* Right: form */}
+          {/* Right: the form */}
           <Reveal delay={0.08}>
-            <GlassCard className="p-6 sm:p-9">
+            <div className="border border-line bg-paper p-6 sm:p-9">
               {status === "success" ? (
                 <SuccessState />
               ) : (
-                <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
+                <form
+                  onSubmit={onSubmit}
+                  noValidate
+                  className="flex flex-col gap-6"
+                >
                   {/* Honeypot (hidden from users and AT) */}
                   <div className="absolute h-0 w-0 overflow-hidden" aria-hidden>
                     <label>
@@ -184,6 +166,16 @@ export default function Contatto() {
                       autoComplete="name"
                     />
                     <Field
+                      id="studio"
+                      label="Studio"
+                      value={fields.studio}
+                      onChange={(v) => update("studio", v)}
+                      autoComplete="organization"
+                    />
+                  </div>
+
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    <Field
                       id="email"
                       label="Email"
                       type="email"
@@ -192,30 +184,17 @@ export default function Contatto() {
                       onChange={(v) => update("email", v)}
                       autoComplete="email"
                     />
-                  </div>
-
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <SelectField
-                      id="tipo"
-                      label="Tipo progetto"
-                      value={fields.tipo}
-                      onChange={(v) => update("tipo", v)}
-                      options={TIPI as unknown as string[]}
-                    />
                     <SelectField
                       id="budget"
                       label="Budget indicativo"
                       value={fields.budget}
                       onChange={(v) => update("budget", v)}
-                      options={BUDGETS as unknown as string[]}
+                      options={budgets as unknown as string[]}
                     />
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor="messaggio"
-                      className="label-mono text-ink-soft"
-                    >
+                    <label htmlFor="messaggio" className="label">
                       Messaggio
                     </label>
                     <textarea
@@ -227,8 +206,8 @@ export default function Contatto() {
                       aria-describedby={
                         errors.messaggio ? "messaggio-err" : undefined
                       }
-                      className="resize-none rounded-2xl border border-frost/60 bg-white/55 px-4 py-3 text-ink outline-none transition-colors placeholder:text-ink-mute/70 focus:border-teal"
-                      placeholder="Cosa vuoi costruire?"
+                      className="field resize-none"
+                      placeholder="Raccontami dello studio e di cosa avete bisogno."
                     />
                     {errors.messaggio ? (
                       <FieldError id="messaggio-err">
@@ -241,21 +220,28 @@ export default function Contatto() {
                     <button
                       type="submit"
                       disabled={status === "submitting"}
-                      className={`btn-primary btn-submit justify-center disabled:cursor-not-allowed disabled:opacity-70 ${
+                      className={`btn-primary btn-submit disabled:cursor-not-allowed disabled:opacity-70 ${
                         done ? "is-done" : ""
                       }`}
                     >
                       <span className="btn-label">
-                        {status === "submitting" ? "Invio in corso" : "Invia richiesta"}
+                        {status === "submitting"
+                          ? "Invio in corso"
+                          : "Invia richiesta"}
                       </span>
-                      <ArrowRight size={14} className="btn-arrow" />
+                      <span className="circ" aria-hidden>
+                        &#8594;
+                      </span>
                       <span className="btn-check" aria-hidden>
                         {"✓"}
                       </span>
                     </button>
-                    <p className="text-xs leading-relaxed text-ink-mute">
+                    <p className="text-xs leading-relaxed text-muted">
                       Inviando accetti la{" "}
-                      <a href="/privacy" className="link-underline text-ink-soft">
+                      <a
+                        href="/privacy"
+                        className="underline underline-offset-2 transition-colors hover:text-ink"
+                      >
                         Privacy Policy
                       </a>
                       .
@@ -265,11 +251,14 @@ export default function Contatto() {
                   {status === "fallback" ? (
                     <p
                       role="status"
-                      className="rounded-2xl border border-frost/50 bg-white/50 px-4 py-3 text-sm text-ink-soft"
+                      className="border border-line bg-paper px-4 py-3 text-sm text-muted"
                     >
-                      Ho aperto la tua app email con il messaggio già pronto. Se
-                      non si è aperta, scrivi a{" "}
-                      <a href={mailtoHref} className="link-underline text-teal-text">
+                      Ho aperto la tua app email con il messaggio già pronto.
+                      Se non si è aperta, scrivi a{" "}
+                      <a
+                        href={mailtoHref}
+                        className="underline underline-offset-2 text-ink"
+                      >
                         {site.email}
                       </a>
                       .
@@ -277,7 +266,7 @@ export default function Contatto() {
                   ) : null}
                 </form>
               )}
-            </GlassCard>
+            </div>
           </Reveal>
         </div>
       </div>
@@ -306,7 +295,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="label-mono text-ink-soft">
+      <label htmlFor={id} className="label">
         {label}
       </label>
       <input
@@ -317,7 +306,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={!!error}
         aria-describedby={error ? `${id}-err` : undefined}
-        className="rounded-2xl border border-frost/60 bg-white/55 px-4 py-3 text-ink outline-none transition-colors focus:border-teal"
+        className="field"
       />
       {error ? <FieldError id={`${id}-err`}>{error}</FieldError> : null}
     </div>
@@ -339,7 +328,7 @@ function SelectField({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="label-mono text-ink-soft">
+      <label htmlFor={id} className="label">
         {label}
       </label>
       <div className="relative">
@@ -347,7 +336,7 @@ function SelectField({
           id={id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full appearance-none rounded-2xl border border-frost/60 bg-white/55 px-4 py-3 pr-10 text-ink outline-none transition-colors focus:border-teal"
+          className="field appearance-none pr-10"
         >
           {options.map((o) => (
             <option key={o} value={o}>
@@ -356,7 +345,7 @@ function SelectField({
           ))}
         </select>
         <span
-          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-mute"
+          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted"
           aria-hidden
         >
           <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -382,7 +371,7 @@ function FieldError({
   children: React.ReactNode;
 }) {
   return (
-    <p id={id} role="alert" className="text-xs text-[#c0453b]">
+    <p id={id} role="alert" className="text-xs text-[#8a4b42]">
       {children}
     </p>
   );
@@ -390,14 +379,17 @@ function FieldError({
 
 function SuccessState() {
   return (
-    <div className="flex flex-col items-center gap-4 py-10 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-teal/10 text-teal-text">
-        <Check size={26} />
+    <div className="flex flex-col items-start gap-4 py-10">
+      <span
+        className="flex h-12 w-12 items-center justify-center rounded-pill border border-slate text-slate"
+        aria-hidden
+      >
+        {"✓"}
       </span>
-      <h3 className="display-md text-ink">Richiesta inviata</h3>
-      <p className="max-w-sm text-ink-soft">
-        Grazie, ho ricevuto il tuo messaggio. Ti rispondo al più presto, di
-        solito entro un giorno lavorativo.
+      <h3 className="title-md">Richiesta inviata</h3>
+      <p className="max-w-sm text-sm leading-relaxed text-muted">
+        Grazie, ho ricevuto il tuo messaggio. Ti rispondo di persona, di solito
+        entro un giorno lavorativo.
       </p>
     </div>
   );
