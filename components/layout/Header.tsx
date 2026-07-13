@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/components/ui/Logo";
 import { nav } from "@/data/site";
+import { getLenis } from "@/lib/lenis";
 
 /**
  * Light navigation: serif wordmark + three links. No button in the menu, the
@@ -28,13 +29,25 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll while the mobile menu is open.
+  // Lock scroll while the mobile menu is open. Lenis drives the scroll with
+  // its own wheel handling, so it must be stopped too: body overflow alone
+  // would not stop it.
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    const lenis = getLenis();
+    if (open) lenis?.stop();
+    else lenis?.start();
     return () => {
       document.body.style.overflow = "";
+      getLenis()?.start();
     };
   }, [open]);
+
+  // Close the menu when the route changes (e.g. logo tap from a legal page),
+  // so the overlay never survives a navigation.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   // Close the menu (and release the scroll lock) when crossing to desktop.
   useEffect(() => {
@@ -97,6 +110,7 @@ export default function Header() {
             href={isHome ? "#top" : "/"}
             aria-label="nevar.web, torna alla home"
             className="relative z-50"
+            onClick={() => setOpen(false)}
           >
             <Logo />
           </Link>

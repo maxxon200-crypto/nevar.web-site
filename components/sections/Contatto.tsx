@@ -142,6 +142,22 @@ export default function Contatto() {
                   noValidate
                   className="flex flex-col gap-6"
                 >
+                  <noscript>
+                    <p className="border border-line bg-paper px-4 py-3 text-sm text-muted">
+                      Con JavaScript disattivato il form non può inviare:
+                      scrivimi direttamente a{" "}
+                      <a
+                        href={`${site.emailHref}?subject=${encodeURIComponent(
+                          site.emailSubject
+                        )}`}
+                        className="underline underline-offset-2 text-ink"
+                      >
+                        {site.email}
+                      </a>
+                      .
+                    </p>
+                  </noscript>
+
                   {/* Honeypot (hidden from users and AT) */}
                   <div className="absolute h-0 w-0 overflow-hidden" aria-hidden>
                     <label>
@@ -164,6 +180,7 @@ export default function Contatto() {
                       value={fields.nome}
                       onChange={(v) => update("nome", v)}
                       autoComplete="name"
+                      maxLength={120}
                     />
                     <Field
                       id="studio"
@@ -171,6 +188,7 @@ export default function Contatto() {
                       value={fields.studio}
                       onChange={(v) => update("studio", v)}
                       autoComplete="organization"
+                      maxLength={160}
                     />
                   </div>
 
@@ -183,6 +201,7 @@ export default function Contatto() {
                       value={fields.email}
                       onChange={(v) => update("email", v)}
                       autoComplete="email"
+                      maxLength={160}
                     />
                     <SelectField
                       id="budget"
@@ -199,7 +218,9 @@ export default function Contatto() {
                     </label>
                     <textarea
                       id="messaggio"
+                      name="messaggio"
                       rows={5}
+                      maxLength={5000}
                       value={fields.messaggio}
                       onChange={(e) => update("messaggio", e.target.value)}
                       aria-invalid={!!errors.messaggio}
@@ -284,6 +305,7 @@ function Field({
   error,
   type = "text",
   autoComplete,
+  maxLength,
 }: {
   id: string;
   label: string;
@@ -292,6 +314,7 @@ function Field({
   error?: string;
   type?: string;
   autoComplete?: string;
+  maxLength?: number;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -300,9 +323,11 @@ function Field({
       </label>
       <input
         id={id}
+        name={id}
         type={type}
         value={value}
         autoComplete={autoComplete}
+        maxLength={maxLength}
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={!!error}
         aria-describedby={error ? `${id}-err` : undefined}
@@ -334,6 +359,7 @@ function SelectField({
       <div className="relative">
         <select
           id={id}
+          name={id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="field appearance-none pr-10"
