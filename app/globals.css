@@ -457,6 +457,207 @@
     padding: 0.05em 0.4em;
     font-size: 0.9em;
   }
+
+  /* ------------------------------------------------------------------------
+     Hero layout: two columns from 980px (title + CTA left, before/after wipe
+     right). Below 980px it stacks - title, subtitle, button, then the
+     comparison - and the secondary link is hidden so one action stays alone.
+     ---------------------------------------------------------------------- */
+  .hero-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-media {
+    margin-top: 26px;
+    width: 100%;
+  }
+  .hero-secondary {
+    display: none;
+  }
+
+  @media (min-width: 980px) {
+    .hero-grid {
+      display: grid;
+      /* More compact variant: set "1fr 320px" here and aspect-ratio 16/10 on .ba */
+      grid-template-columns: 1fr 400px;
+      gap: 48px;
+      align-items: center;
+    }
+    .hero-media {
+      margin-top: 0;
+    }
+    .hero-secondary {
+      display: inline-block;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     Before / after wipe (see components/BeforeAfter.tsx).
+     ---------------------------------------------------------------------- */
+  .ba-wrap {
+    width: 100%;
+  }
+  .ba-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 9px;
+  }
+  .ba-kk {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    /* ref used #8B949A (2.6:1 on paper, fails AA). --muted keeps the faint
+       eyebrow intent and passes AA here (top of the block, lightest gradient). */
+    color: var(--muted);
+  }
+  .ba-drag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    /* the word is --muted (passes AA); slate stays only on the decorative arrow
+       below, so the hint keeps its accent without failing contrast */
+    color: var(--muted);
+  }
+  .ba-drag i {
+    font-style: normal;
+    display: inline-block;
+    color: var(--slate);
+    animation: baNudge 1.9s ease-in-out infinite;
+  }
+
+  .ba {
+    position: relative;
+    aspect-ratio: 4 / 3; /* very compact variant: 16 / 10 */
+    border: 1px solid rgba(22, 25, 28, 0.2);
+    overflow: hidden;
+    cursor: ew-resize;
+    user-select: none;
+    background: #edebe6;
+  }
+  .ba-img {
+    object-fit: cover;
+  }
+  .ba-after {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Grey placeholders shown until the real screenshots exist. Both light so the
+     "Screenshot da inserire" label reads (>= 4.5:1); warm "prima" vs cooler,
+     faintly lined "dopo" so the wipe is visible without inventing fake imagery. */
+  .ba-ph {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .ba-ph-a {
+    background: #e7e5df;
+  }
+  .ba-ph-b {
+    background: #d7dee2;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(78, 106, 120, 0.12) 0,
+      rgba(78, 106, 120, 0.12) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+  }
+
+  .ba-lab {
+    position: absolute;
+    bottom: 10px;
+    z-index: 4;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+  }
+  .ba-lab.l {
+    left: 10px;
+    background: rgba(22, 25, 28, 0.86);
+    color: #f6f5f2;
+  }
+  .ba-lab.r {
+    right: 10px;
+    background: #4e6a78;
+    color: #ffffff;
+  }
+
+  .ba-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    z-index: 5;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(22, 25, 28, 0.22);
+    cursor: ew-resize;
+  }
+  .ba-handle:focus-visible {
+    outline: 2px solid #4e6a78;
+    outline-offset: 2px;
+  }
+  .ba-knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(22, 25, 28, 0.32);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #16191c;
+  }
+
+  .ba-stamp {
+    margin-top: 9px;
+    font-size: 9.5px;
+    /* the disclaimer sits low in the hero, over the darker end of the gradient
+       (toward --deep), where muted/slate would drop under 4.5:1. --ink keeps it
+       readable (the brief asks for this) at any scroll position; the small size
+       keeps it visually secondary. */
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .ba-stamp b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+}
+
+/* Nudge for the "Trascina" hint. Neutralised by the reduced-motion block below. */
+@keyframes baNudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -471,5 +672,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+  /* the "Trascina" arrow stops pulsing */
+  .ba-drag i {
+    animation: none !important;
   }
 }
