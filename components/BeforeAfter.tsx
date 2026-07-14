@@ -20,10 +20,10 @@ import { useCallback, useRef, useState } from "react";
  *   import Image from "next/image";
  *   // PRIMA layer (the bottom, always visible):
  *   <Image src="/lavori/studio-prima.webp" alt="La home dello studio com'e adesso"
- *          fill sizes="(max-width: 980px) 100vw, 400px" priority className="ba-img" />
+ *          fill sizes="(max-width: 980px) 100vw, 520px" priority className="ba-img" />
  *   // DOPO layer (inside .ba-after, the clipped one):
  *   <Image src="/lavori/studio-dopo.webp" alt="La stessa home riprogettata da nevar.web"
- *          fill sizes="(max-width: 980px) 100vw, 400px" className="ba-img" />
+ *          fill sizes="(max-width: 980px) 100vw, 520px" className="ba-img" />
  *
  * The two files must share crop and ratio, be WebP, max 800px wide, under 120kB
  * each, otherwise the comparison jumps. Keep `priority` only on the "prima"
